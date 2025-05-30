@@ -17,3 +17,140 @@
     <link rel="stylesheet" href="/static/css/nav&foot.css">
     {% block styles %} {% endblock %}
 </head>
+
+<body class="d-flex flex-column min-vh-100">
+    {% set current_page = request.endpoint %}
+
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top shadow">
+            <div class="container">
+                <a href="{{ url_for('local.index') }}" class="navbar-brand d-flex flex-column">
+                    <div>
+                        <span>Vehicle</span>
+                        <span class="p-0">
+                            <i class="fas fa-parking me-2"></i>
+                        </span>
+                    </div>
+                    {% if current_user.is_authenticated %}
+                    <small class="text-white" style="font-size: 1rem;">{{ current_user.email }}</small>
+                    {% endif %}
+                </a>
+
+                <!-- Toggler Button (for dropdown on small screens) -->
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+                    aria-label="Toggle navigation" id="toggleButton">
+                    <span class="custom-toggler" id="togglerIcon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto flex-column flex-lg-row text-center">
+                        {% if current_user.is_authenticated %}
+                        {% if current_user.is_admin() %}
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'admin.parking_lots' %}active{% endif %}"
+                                href="{{ url_for('admin.parking_lots') }}"><i class="fa-solid fa-house"></i>HOME</a>
+                        </li>
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'admin.users' %}active{% endif %}" href="{{ url_for('admin.registered_users')}}"><i
+                                    class="fa-solid fa-users"></i>USERS</a>
+                        </li>
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'admin.search' %}active{% endif %}"
+                                href="{{ url_for('admin.search')}}"><i class="fa-solid fa-magnifying-glass"></i>SEARCH</a>
+                        </li>
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'admin.summary' %}active{% endif %}" href="{{ url_for('admin.summary') }}"><i
+                                    class="fas fa-chart-bar"></i>SUMMARY</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'index' %}active{% endif %}"
+                                href="{{ url_for('user.dashboard') }}"><i class="fa-solid fa-house"></i>HOME</a>
+                        </li>
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'summary' %}active{% endif %}"
+                                href="{{ url_for('user.summary')}}"><i class="fas fa-chart-bar"></i>SUMMARY</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}"><i
+                                    class="fas fa-sign-out-alt"></i> LOGOUT</a>
+                        </li>
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'profile' %}active{% endif %}"
+                                href="{{ url_for('user.profile') }}"><i class="fas fa-user"></i>PROFILE</a>
+                        </li>
+                        {% else %}
+
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'local.index' %}active{% endif %}"
+                                href="{{ url_for('local.index') }}"><i class="fa-solid fa-house"></i>HOME</a>
+                        </li>
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'local.about' %}active{% endif %}"
+                                href="{{ url_for('local.about') }}"><i class="fa-solid fa-circle-info"></i>ABOUT US</a>
+                        </li>
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'local.contact' %}active{% endif %}"
+                                href="{{ url_for('local.contact') }}"><i class="fa-solid fa-address-book"></i>CONTACT</a>
+                        </li>
+
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'auth.login' %}active{% endif %}"
+                                href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
+                        </li>
+                        <li class="nav-item px-md-2">
+                            <a class="nav-link {% if current_page == 'auth.sign_up' %}active{% endif %}"
+                                href="{{ url_for('auth.sign_up') }}"><i class="fas fa-user-plus"></i>SIGN UP</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="flex-grow-1">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for field, message in messages %}
+        <div class="alert alert-{{ field }} alert-dismissible fade show" role="alert">
+            <strong>{{ field.capitalize() }}!</strong> {{ message }}
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif%}
+        {% endwith %}
+
+        {% block main_content %}
+
+        {% endblock %}
+    </main>
+    <footer>
+        <div class="container-fluid text-center p-2 mt-3">
+            <h5><i class="fas fa-parking me-2"></i> Vehicle Parking App</h5>
+            <p>Making parking easier and more efficient.</p>
+            <p>&copy; 2025 Vehicle-P. All rights reserved.</p>
+            <p>
+                Follow us on: <a href="#">Facebook</a>, <a href="#">Twitter</a>,
+                <a href="#">Instagram</a>
+            </p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const toggleButton = document.getElementById("toggleButton");
+        const togglerIcon = document.getElementById("togglerIcon");
+
+        toggleButton.addEventListener("click", () => {
+            togglerIcon.classList.toggle("active");
+        });
+    </script>
+    {% block scripts %} {% endblock %}
+</body>
+
+</html>
