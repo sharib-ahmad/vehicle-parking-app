@@ -50,7 +50,7 @@ def create_admin_user(app):
                 )
                 db.session.add(admin)
                 db.session.commit()
-                current_app.logger.info(f'admin created successfully {admin.full_name}')
+                current_app.logger.info(f'admin created successfully {admin.id}')
             except SQLAlchemyError as e:
                 db.session.rollback()
                 current_app.logger.error(f'error occured during created automatic admin to database {str(e)}')
