@@ -6,3 +6,4 @@ db = SQLAlchemy()
 
 
 from .model import UserRole, User 
+from .form import RegistrationForm
