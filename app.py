@@ -1,5 +1,6 @@
 from flask import Flask
-from models import db
+from models import db, login_manager ,csrf
+from controllers import register_blueprints
 import os 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -12,6 +13,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'f56ae947f162336cb881dc9d354f3f4e6bb092c432065c3a'
 
 db.init_app(app)
+login_manager.init_app(app)
+csrf.init_app(app)
+
+login_manager.login_view = 'auth.login'
+
 
 
 # --- Create Logs Folder & Setup Logging ---
