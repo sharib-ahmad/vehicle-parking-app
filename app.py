@@ -1,5 +1,5 @@
 from flask import Flask
-from models import db, login_manager ,csrf
+from models import db, login_manager ,csrf, User, create_admin_user
 from controllers import register_blueprints
 import os 
 import logging
@@ -18,6 +18,10 @@ csrf.init_app(app)
 
 login_manager.login_view = 'auth.login'
 
+# --- User loader for Flask-Login ---
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 
 # --- Create Logs Folder & Setup Logging ---
@@ -33,6 +37,12 @@ file_handler.setLevel(logging.INFO)
 app.logger.addHandler(file_handler)
 app.logger.setLevel(logging.INFO)
 app.logger.info('App started and logging is set up.')
+
+# --- Create Admin and Tables ---
+with app.app_context():
+    db.create_all()
+    create_admin_user(app)
+
 
 
 if __name__ == '__main__':
