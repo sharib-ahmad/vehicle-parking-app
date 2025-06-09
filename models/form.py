@@ -23,3 +23,10 @@ class RegistrationForm(FlaskForm):
     address = StringField(label='Address', validators=[DataRequired()])
     pin_code = StringField(label='Pin Code', validators=[DataRequired(), Length(min=6, max=10)])
     submit = SubmitField(label='Register')
+
+class LoginForm(FlaskForm):
+    email = StringField(label='Registered Email Id', validators=[DataRequired(), Email()])
+    password = PasswordField(label='Password', validators=[DataRequired()])
+    submit = SubmitField(label='Login')
+
+

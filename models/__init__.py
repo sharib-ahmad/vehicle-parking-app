@@ -8,4 +8,4 @@ login_manager = LoginManager()
 csrf = CSRFProtect()
 
 from .model import UserRole, User, create_admin_user
-from .form import RegistrationForm
+from .form import RegistrationForm, LoginForm

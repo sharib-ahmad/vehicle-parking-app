@@ -1,0 +1,43 @@
+{% extends 'auth/registration.html' %}
+
+{% block title %}
+Vehicle-P | Login
+{% endblock %}
+
+{% block main_content %}
+<div class="container-fluid p-5 my-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card p-4">
+                <h2 class="text-center mb-4">Login</h2>
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    
+                    {{ form.hidden_tag() }}
+
+                    <div class="form-floating mb-3 position-relative">
+                        {{ form.email(class="form-control", id="email", placeholder="example@gmail.com") }}
+                        {{ form.email.label(class="form-label") }}
+                        <i class="bi bi-envelope position-absolute top-50 end-0 translate-middle-y me-3 fs-3 fw-bold"></i>
+                    </div>
+
+                    <div class="form-floating mb-3 position-relative">
+                        {{ form.password(class="form-control", id="password", placeholder="Password") }}
+                        {{ form.password.label(class="form-label") }}
+                        <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 fs-3 fw-bold"
+                           id="togglePassword" style="cursor: pointer"></i>
+                    </div>
+
+                    {{ form.submit(class="btn btn-primary w-100") }}
+
+                    <div class="text-center mt-3">
+                        <p class="mb-0">Don't have an account?
+                            <a href="{{ url_for('auth.sign_up') }}" class="fs-5 fw-medium">Register here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
