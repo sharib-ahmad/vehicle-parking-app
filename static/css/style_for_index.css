@@ -1,0 +1,203 @@
+
+.bg-img-one {
+  background: url("/static/images/car-parking-bg.jpg") no-repeat center center;
+  /* Credit: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8noO3Ll-Nyc8gs5l3m2v56a-CoYeyJAqFhw&s */
+  background-size: cover;
+  position: relative;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-img-one::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.bg-content {
+  z-index: 2;
+  max-width: 800px;
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(5px);
+}
+
+.bg-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #00d4ff;
+}
+
+.bg-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #f1f1f1;
+}
+
+/* card classes */
+.card {
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+  background: none;
+  backdrop-filter: blur(10px);
+  color: #f1f1f1;
+  padding: 2rem;
+  z-index: 2;
+}
+
+.why-us .card img {
+  background-color: whitesmoke;
+  border-radius: 50%;
+  padding: 1rem;
+  width: 100px;
+  height: 100px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+  transition: tansform 0.3s ease;
+}
+
+.why-us .card img:hover {
+  transform: scale(1.1);
+}
+
+.no-break {
+  white-space: nowrap;
+}
+
+.bg-img-two {
+  background-image: url("/static/images/siemens-fire-safety-electric-vehicles-fire-protection-parking-garage.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.bg-img-two::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+/* Pricing Section Background */
+.pricing-section {
+  background-image: url("/static/images/siemens-fire-safety-electric-vehicles-fire-protection-parking-garage.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.pricing-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.price-head {
+  color: #00d4ff !important;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+  position: relative;
+}
+
+/* Card Container */
+.pricing-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: #f1f1f1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 1rem;
+  padding: 1rem;
+  z-index: 2;
+}
+
+/* Card Hover Effect */
+.pricing-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 212, 255, 0.3);
+}
+
+.card-head{
+    position: relative;
+    padding: 2rem;
+    text-align: center;
+    color: #ffffff;
+    border-radius: 15px 15px 0 0;
+}
+
+.card-head::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  background: #ff6f3c;
+  border-radius: 100%;
+  transform: translate(-50%, -50%);
+}
+
+/* Card content */
+.pricing-card .card-title {
+  font-weight: bold;
+  margin-top: 2rem;
+  padding: 2rem;
+  color: #00d4ff;
+  z-index: 2;
+}
+
+.pricing-card .card-text {
+  font-size: 0.95rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.price{
+    z-index: 100;
+    transform: translateY(-4rem);
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.feedback img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    margin: 0 auto;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.8);
+}
+
+.feedback h5 {
+    margin-top: 1rem;
+    font-weight: bold;
+}
