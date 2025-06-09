@@ -1,0 +1,60 @@
+
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+    background: none;
+    backdrop-filter: blur(10px);
+}
+
+.form-floating input{
+    border: 2px solid rgba(255, 255, 255, 0.226);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2rem;
+    color : aliceblue;
+    
+}
+.form-floating input:focus{
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    font-weight: 700;
+    color: rgb(9, 0, 0);
+}
+.form-floating i{
+    color: black;
+}
+
+
+.form-floating label{
+    font-weight: 700;
+    color : black
+}
+
+.form-floating input::placeholder{
+    color: aliceblue;
+}
+.form-floating input:focus::placeholder{
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.text-center{
+    color: aliceblue;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.1) inset !important;
+    box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.1) inset !important;
+    -webkit-text-fill-color: aliceblue !important;
+    caret-color: aliceblue !important;
+    border-radius: 2rem !important;
+    transition: background-color 600000s ease-in-out 0s, color 600000s ease-in-out 0s !important;
+}
+
+
+
+
+
+
+
