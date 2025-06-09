@@ -1,1 +1,54 @@
-{% extends 'layout.html' %}
+{% extends 'index.html' %}
+
+{% block title %}
+Vehicle-P | contact
+{% endblock %}
+
+{% block main_content %}
+<div class="container py-5">
+    <h2 class="text-center mb-4">Contact Us</h2>
+
+    <div class="row">
+        <!-- Contact Info -->
+        <div class="col-md-5 mb-4">
+            <h5><i class="fa-solid fa-location-dot me-2 text-danger"></i>Our Address</h5>
+            <p>123 Example Street, City, Country</p>
+
+            <h5><i class="fa-solid fa-phone me-2 text-success"></i>Call Us</h5>
+            <p>+91 98765 43210</p>
+
+            <h5><i class="fa-solid fa-envelope me-2 text-primary"></i>Email</h5>
+            <p>support@example.com</p>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-md-7">
+            <form>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Your Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Your Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label">Your Message</label>
+                    <textarea class="form-control" id="message" rows="5" placeholder="Write your message here..."
+                        required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

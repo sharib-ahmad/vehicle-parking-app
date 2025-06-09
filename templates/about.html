@@ -1,1 +1,42 @@
-{% extends 'layout.html' %}
+{% extends 'index.html' %}
+
+{% block title %}
+Vehicle-P | About Us
+{% endblock %}
+
+{% block main_content %}
+<div class="container mb-5">
+    <div class="text-center mb-4">
+        <h2 class="mt-5">ABOUT VEHICLE-P</h2>
+        <p>
+            Vehicle-P is a modern parking management system designed to make parking seamless and hassle-free. 
+            We offer real-time slot tracking, online booking, and secure access for both users and admins.
+        </p>
+    </div>
+
+    <div class="row align-items-center gy-4">
+        <!-- Image Column -->
+        <div class="col-12 col-lg-6 text-center">
+            <img src="https://picsum.photos/600/400" alt="About Us" class="img-fluid rounded">
+        </div>
+
+        <!-- Text Column -->
+        <div class="col-12 col-lg-6">
+            <p>
+                At Vehicle-P, our mission is to solve daily parking challenges using smart technology. 
+                We’ve made it easy to find, reserve, and manage parking spots with just a few clicks.
+            </p>
+            <p>
+                <strong>Our Features:</strong><br>
+                - Real-time availability updates<br>
+                - Easy and secure booking process<br>
+                - Admin and user dashboards<br>
+                - Trusted by 10,000+ users<br>
+            </p>
+            <p>
+                Whether you're managing a parking facility or just need a spot quickly, Vehicle-P has you covered.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

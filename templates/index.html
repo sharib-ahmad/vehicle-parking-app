@@ -1,1 +1,195 @@
-{% extends 'layout.html' %}
+{% extends 'layout.html'%}
+{% block title %}
+Vehicle-P | Home
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_index.css') }}">
+{% endblock %}
+{% block main_content %}
+<section class="glow-content">
+
+    <div class="container-fluid p-0 text-center">
+        <div class="bg-img-one">
+            <div class="bg-content">
+                <h1>Welcome to <span class="no-break">Vehicle-P</span></h1>
+                <p class="pt-3">Your one-stop solution for vehicle parking management.</p>
+                <p class="pt-3">
+                    Streamline your parking operations with our intelligent system designed to reduce hassle,
+                    save time, and ensure security. Whether you're managing a small lot or a large facility,
+                    Vehicle-P helps you stay in control, every step of the way.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="why-us">
+    <div class="container-fluid text-center p-5">
+        <h2>WHY US&quest;</h2>
+        <p>
+            We bring simplicity and innovation together to offer a seamless parking experience. Our platform is
+            trusted by users for its reliability, cutting-edge technology, and commitment to customer satisfaction.
+        </p>
+        <div class="row row-cols-1 row-cols-md-3 g-4 m-0">
+            <div class="col">
+                <div class="card h-100 d-flex flex-column justify-content-center align-items-center">
+                    <img src="/static/images/1580307375_UkBFLlKDUE.svg" class="card-img-top img-fluid " alt="..."
+                        style="max-height: 15vh;">
+                    <div class="card-body">
+                        <h5 class="card-title">Superior Service</h5>
+                        <p class="card-text">
+                            We prioritize customer satisfaction with 24/7 support, fast responses, and clear guidance to ensure a hassle-free experience.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 d-flex flex-column justify-content-center align-items-center">
+                    <img src="/static/images/1580307404_vPmLrZGUrj.svg" class="card-img-top img-fluid" alt="..."
+                        style=" max-height: 15vh;">
+                    <div class="card-body">
+                        <h5 class="card-title">Innovative Technology</h5>
+                        <p class="card-text">
+                            Our system is built using modern tools and smart algorithms, offering automated tracking,
+                            real-time availability, and seamless user experience.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 d-flex flex-column justify-content-center align-items-center">
+                    <img src="/static/images/1580307426_og6tGZBApw.svg" class="card-img-top img-fluid" alt="..."
+                        style=" max-height: 15vh;">
+                    <div class="card-body">
+                        <h5 class="card-title">End-to-End Solution</h5>
+                        <p class="card-text">
+                            From booking to payment, Vehicle-P covers every step of the parking process to give
+                            you a truly all-in-one experience.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-us py-5">
+    <div class="container text-center mb-5">
+        <h2>ABOUT US</h2>
+        <p>
+            At Vehicle-P, we are passionate about transforming the way people park. Our mission is to simplify parking management through smart technology and user-focused solutions. We are constantly evolving to meet the changing needs of modern urban environments.
+        </p>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center">
+                <img src="https://picsum.photos/400" alt="About Us" class="img-fluid rounded-5">
+            </div>
+            <div class="col-lg-6">
+                <p class="p-3">
+                    Vehicle-P started with a simple idea: make parking stress-free. Today, we serve thousands of users
+                    by offering tools that help locate, book, and manage parking spaces efficiently. Our team of
+                    engineers, designers, and support staff work tirelessly to deliver the best experience possible.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pricing-section text-center py-5">
+    <div class="container">
+        <h2 class="price-head">Buy Our Membership</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-4">
+                <div class="card pricing-card">
+                    <div class="card-head price-tag"></div>
+                    <div class="price"><i class="fa-solid fa-indian-rupee-sign"></i>2K</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Basic</h5>
+                        <p class="card-text">
+                            Ideal for occasional users. Get access to all parking lots and enjoy basic support during operational hours.
+                        </p>
+                        <a href="#" class="btn btn-info" role="button">Read More ➞</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card pricing-card">
+                    <div class="card-head price-tag"></div>
+                    <div class="price"><i class="fa-solid fa-indian-rupee-sign"></i>5K</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Premium</h5>
+                        <p class="card-text">
+                            Perfect for regular users. Enjoy priority support, reserved slots, and real-time tracking at your fingertips.
+                        </p>
+                        <a href="#" class="btn btn-info" role="button">Read More ➞</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card pricing-card">
+                    <div class="card-head price-tag"></div>
+                    <div class="price"><i class="fa-solid fa-indian-rupee-sign"></i>3K</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Standard</h5>
+                        <p class="card-text">
+                            A balanced option offering extended support, quick bookings, and useful analytics to
+                            optimize your parking habits.
+                        </p>
+                        <a href="#" class="btn btn-info" role="button">Read More ➞</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="feedback py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Feedback</h2>
+        <p class="mb-5">
+            Don’t just take our word for it. Here's what our users are saying about Vehicle-P and how it's improved their parking experience.
+        </p>
+
+        <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://picsum.photos/200" class="rounded-circle mb-3" alt="Feedback 1">
+                    <p class="px-3">"Vehicle-P makes finding and booking a parking spot so much easier. I can't imagine parking without it now."</p>
+                    <h5>- John Doe</h5>
+                </div>
+
+                <div class="carousel-item">
+                    <img src="https://picsum.photos/200?2" class="rounded-circle mb-3" alt="Feedback 2">
+                    <p class="px-3">"The technology behind Vehicle-P is impressive. It saves me time every day during my commute."</p>
+                    <h5>- Jane Smith</h5>
+                </div>
+
+                <div class="carousel-item">
+                    <img src="https://picsum.photos/200?3" class="rounded-circle mb-3" alt="Feedback 3">
+                    <p class="px-3">"Affordable, convenient, and reliable — Vehicle-P has completely changed how I view city parking."</p>
+                    <h5>- Alice Johnson</h5>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon rounded-circle p-2" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon rounded-circle p-2" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</section>
+{% endblock %}
