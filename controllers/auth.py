@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template,redirect , url_for, flash, current_app
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user, login_required
 from models import db, User, UserRole, RegistrationForm, LoginForm
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
