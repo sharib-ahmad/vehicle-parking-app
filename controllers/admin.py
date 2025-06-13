@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 
 from models import (ParkingLot, CsrfOnlyForms
-, ParkingLotForm, ParkingSpot, SpotStatus, db)
+, ParkingLotForm,EditParkingLotForm, ParkingSpot, SpotStatus, db)
 
 
 
