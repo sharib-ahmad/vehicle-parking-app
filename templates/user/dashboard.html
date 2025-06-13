@@ -1,0 +1,165 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Vehicle-P | Home
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_user_dashboard.css') }}">
+{% endblock %}
+
+{% block main_content %}
+{% if reservations %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Recent Parking History</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
+                <tr class="text-success">
+                    <th>ID</th>
+                    <th>Location</th>
+                    <th>Vehicle No</th>
+                    <th>Timestamp</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for res in reservations[:6] %}
+                <tr>
+                    <td>{{ res.id }}</td>
+                    <td>{{ res.parking_spot.parking_lot.name }}</td>
+                    <td>{{ res.vehicle_number }}</td>
+
+                    {% if res.status.value == 'active' %}
+                    <td>{{ res.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-danger" href="{{ url_for('user.released', reservation_id=res.id) }}"
+                            role="button">Release</a>
+                    </td>
+                    {% else %}
+                    <td>{{ res.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+
+                        <span class="custom-text ">Parked Out</span>
+
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+
+                {% for res in reservations[6:15] %}
+                <tr class="extra-row d-none">
+                    <td>{{ res.id }}</td>
+                    <td>{{ res.parking_spot.parking_lot.name }}</td>
+                    <td>{{ res.vehicle_number }}</td>
+
+                    {% if res.status.value == 'active' %}
+                    <td>{{ res.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-danger" href="{{ url_for('user.released', reservation_id=res.id) }}"
+                            role="button">Release</a>
+                    </td>
+                    {% else %}
+                    <td>{{ res.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+
+                       <span class="btn btn-sm btn-success">Parked Out</span>
+
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if reservations|length > 6 %}
+        <div class="text-center mt-3">
+            <button id="viewMoreBtn" class="btn btn-outline-primary">View More</button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="container-fluid py-4 px-3 px-md-5">
+    <!-- Sticky Search Bar -->
+    <div class="row justify-content-center mb-4 sticky-top  py-3 shadow-sm z-3 custom-sticky-top">
+        <div class="col-12 col-md-10 col-lg-8">
+            <form method="POST" action="{{ url_for('user.dashboard') }}" class="mb-4 d-flex">
+                {{ form.hidden_tag() }}
+                {{ form.location(class="form-control me-2", placeholder="Enter
+                location/pin-code/prime_location_name...") }}
+                {{ form.submit(class="btn btn-primary me-2") }}
+                <a href="{{ url_for('user.clear_search') }}" class="btn btn-secondary text-center">Clear</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Optional: Show what was searched -->
+    {% if searched_location %}
+    <div class="text-center mb-3">
+        <h6 class="text-muted">Showing results for "<strong>{{ searched_location }}</strong>"</h6>
+    </div>
+    {% endif %}
+
+    <div class="row g-4 justify-content-center">
+        {% for lot in parking_lots %}
+        <div class="col-sm-12 col-md-6 col-lg-4 d-flex">
+            <a href="{{ url_for('user.reserve_spot', lot_id=lot.id) }}" class="text-decoration-none w-100">
+                <div class="card custom-card  w-100 animate-fade-in">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-primary">{{ lot.name }}</h5>
+                        <div class="mt-auto">
+                            <p><i
+                                    class="fa-solid fa-location-dot me-2 text-danger hover-glow"></i><strong>Location:</strong>
+                                {{
+                                lot.prime_location_name }}</p>
+                            <p class="text-truncate"><i
+                                    class="fa-solid fa-map me-2 text-secondary"></i><strong>Address:</strong> {{
+                                lot.address }}</p>
+                            <p><i
+                                    class="fa-solid fa-indian-rupee-sign me-2 text-success"></i><strong>Price/Hour:</strong>
+                                {{ lot.price_per_hour }}</p>
+                            <p><i class="fa-solid fa-layer-group me-2 text-info"></i><strong>Floor Level:</strong> {{
+                                lot.floor_level }}</p>
+                            <p class="text-center text-primary">Click on card to register</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% else %}
+        <div class="col-12 text-center">
+            <div class="alert alert-warning" role="alert">
+                No parking lots found for the given location. Try a different keyword!
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('viewMoreBtn');
+        if (!btn) return; // no button, no script needed
+
+        btn.addEventListener('click', function () {
+            const hiddenRows = document.querySelectorAll('.extra-row');
+            const isHidden = hiddenRows[0].classList.contains('d-none');
+
+            hiddenRows.forEach(row => {
+                if (isHidden) {
+                    row.classList.remove('d-none');
+                } else {
+                    row.classList.add('d-none');
+                }
+            });
+
+            btn.textContent = isHidden ? 'View Less' : 'View More';
+        });
+    });
+</script>
+{% endblock %}
