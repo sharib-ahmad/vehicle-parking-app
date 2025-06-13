@@ -57,6 +57,10 @@ class EditParkingLotForm(FlaskForm):
         choices=[('true', 'True'), ('false', 'False')]) 
     maximum_number_of_spots = IntegerField(label='Max Number of Spots', validators=[DataRequired(), NumberRange(min=1)],render_kw={'readonly' : True})
     submit = SubmitField(label='Update')
-    
+
+class UserSearchForm(FlaskForm):
+    location = StringField(label='Search by Location', validators=[DataRequired()])
+    submit = SubmitField(label='Search')
+
 class CsrfOnlyForms(FlaskForm):
     pass
