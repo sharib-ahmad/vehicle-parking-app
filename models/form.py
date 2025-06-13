@@ -30,3 +30,5 @@ class LoginForm(FlaskForm):
     submit = SubmitField(label='Login')
 
 
+class CsrfOnlyForms(FlaskForm):
+    pass

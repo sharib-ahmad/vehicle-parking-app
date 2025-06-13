@@ -7,5 +7,6 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 csrf = CSRFProtect()
 
-from .model import UserRole, User, create_admin_user
-from .form import RegistrationForm, LoginForm
+from .model import UserRole, User, create_admin_user, ParkingLot, SpotStatus
+
+from .form import RegistrationForm, LoginForm, CsrfOnlyForms
