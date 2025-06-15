@@ -373,13 +373,24 @@ def delete_scheduled_users():
 @login_required
 def summary():
     """ 
-    Renders the user summary page.
-    Features:
-    - Displays user statistics and overview
-    - Links to detailed analytics and charts
-    - Shows parking history summary
+    Renders the user summary page with reservation and payment info.
+    - Shows parking history
+    - Displays amount spent per reservation
     """
-    return render_template('user/summary.html')
+    reservations = ReservedParkingSpot.query.filter_by(user_id=current_user.id).order_by(
+        ReservedParkingSpot.reservation_timestamp.desc()).all()
+
+    total_spent = sum(
+        r.payment.amount for r in reservations
+        if r.payment and r.payment.payment_status == PaymentStatus.PAID
+    )
+
+    return render_template(
+        'user/summary.html',
+        reservations=reservations,
+        total_spent=total_spent
+    )
+
 
 @user_bp.route('/chart/parking-spot-summary')
 @login_required

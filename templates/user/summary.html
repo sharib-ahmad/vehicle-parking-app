@@ -3,13 +3,63 @@
 {% block title %}Summary{% endblock %}
 
 {% block main_content %}
-<div class="container text-center mt-5">
+<div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-sm-12">
-            <img src="{{ url_for('user.parking_spot_summary_chart') }}" class="img-fluid rounded shadow" alt="Parking Spot Investment Chart">
-            <p class="mt-3 fw-medium">Summary on already used parking spots</p>
+        <div class="col-md-10 col-sm-12">
+            <h2 class="text-center mb-4">Your Parking Summary</h2>
+
+            <!-- Chart -->
+            <div class="text-center mb-4">
+                <img src="{{ url_for('user.parking_spot_summary_chart') }}" class="img-fluid rounded shadow" alt="Parking Spot Investment Chart">
+                <p class="mt-3 fw-medium">Summary on already used parking spots</p>
+            </div>
+
+            <!-- Total Spent -->
+            <div class="alert alert-info fw-bold text-center">
+                Total Amount Spent: ₹{{ total_spent or 0.0 }}
+            </div>
+
+            <!-- Reservation Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Spot</th>
+                            <th>Lot</th>
+                            <th>Entry Time</th>
+                            <th>Exit Time</th>
+                            <th>Status</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in reservations %}
+                        <tr>
+                            <td>{{ r.parking_spot.spot_number }}</td>
+                            <td>{{ r.parking_spot.parking_lot.name }}</td>
+                            <td>{{ r.parking_timestamp.strftime('%Y-%m-%d %H:%M') if r.parking_timestamp else '-' }}</td>
+                            <td>
+                                {% if r.leaving_timestamp %}
+                                    {{ r.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}
+                                {% else %}
+                                    <span class="text-muted">Still Parked</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ r.status.value|capitalize }}</td>
+                            <td>
+                                {% if r.payment and r.payment.payment_status.name == 'PAID' %}
+                                    ₹{{ r.payment.amount }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>
-
 {% endblock %}
