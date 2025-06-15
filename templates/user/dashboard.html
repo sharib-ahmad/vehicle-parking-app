@@ -28,7 +28,8 @@ Vehicle-P | Home
                 {% for res in reservations[:6] %}
                 <tr>
                     <td>{{ res.id }}</td>
-                    <td>{{ res.parking_spot.parking_lot.name }}</td>
+                    <td>{{ res.parking_spot.parking_lot.name if res.parking_spot and res.parking_spot.parking_lot else
+                        'Deleted Lot' }}</td>
                     <td>{{ res.vehicle_number }}</td>
 
                     {% if res.status.value == 'active' %}
@@ -51,7 +52,8 @@ Vehicle-P | Home
                 {% for res in reservations[6:15] %}
                 <tr class="extra-row d-none">
                     <td>{{ res.id }}</td>
-                    <td>{{ res.parking_spot.parking_lot.name }}</td>
+                    <td>{{ res.parking_spot.parking_lot.name if res.parking_spot and res.parking_spot.parking_lot else
+                        'Deleted Lot' }}</td>
                     <td>{{ res.vehicle_number }}</td>
 
                     {% if res.status.value == 'active' %}
@@ -64,7 +66,7 @@ Vehicle-P | Home
                     <td>{{ res.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
                     <td>
 
-                       <span class="btn btn-sm btn-success">Parked Out</span>
+                        <span class="btn btn-sm btn-success">Parked Out</span>
 
                     </td>
                     {% endif %}
