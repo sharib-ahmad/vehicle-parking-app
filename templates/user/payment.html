@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}
+Vehicle-P | Payment
+{% endblock %}
+
+{% block main_content %}
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            <div class="card shadow-lg rounded-4">
+                <div class="card-header bg-dark text-white rounded-top-4">
+                    <h5 class="text-center mb-0"><i class="fas fa-lock me-2"></i>Secure Payment</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('user.make_payment', reservation_id=reservation.id) }}">
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            <label class="form-label">Amount to Pay (₹)</label>
+                            {{ form.amount(class="form-control", readonly=True) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Select Payment Method</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                {{ form.payment_method(class="form-select") }}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ url_for('user.cancel_payment') }}" class="btn btn-outline-danger">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            {{ form.submit(class="btn btn-success px-4") }}
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted text-center">
+                    <small><i class="fas fa-shield-alt me-1"></i>Payments are encrypted and secure.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

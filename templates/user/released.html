@@ -1,0 +1,89 @@
+{% extends 'layout.html' %}
+{% block title %}
+Vehicle-P | Released
+{% endblock %}
+<!-- ReleasedForm Modal -->
+
+{% block main_content %}
+<div class="modal fade" id="releaseModal" tabindex="-1" aria-labelledby="releaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg"><!-- wider modal -->
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('user.released', reservation_id=reservation.id) }}">
+                {{ form.hidden_tag() }}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="releaseModalLabel">Release Vehicle</h5>
+                    <a class="btn btn-close" href="{{ url_for('user.dashboard') }}" role="button"></a>
+                </div>
+
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row g-3">
+                            <!-- user_id, spot_id, vehicle_number in one row -->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.user_id.label(class="form-label") }}
+                                    {{ form.user_id(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.spot_id.label(class="form-label") }}
+                                    {{ form.spot_id(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.vehicle_number.label(class="form-label") }}
+                                    {{ form.vehicle_number(class="form-control") }}
+                                </div>
+                            </div>
+
+                            <!-- parking_timestamp, leaving_timestamp in one row -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.parking_timestamp.label(class="form-label") }}
+                                    {{ form.parking_timestamp(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.leaving_timestamp.label(class="form-label") }}
+                                    {{ form.leaving_timestamp(class="form-control") }}
+                                </div>
+                            </div>
+
+                            <!-- duration and total_cost in one row -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.duration.label(class="form-label") }}
+                                    {{ form.duration(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.total_cost.label(class="form-label") }}
+                                    {{ form.total_cost(class="form-control") }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-secondary" href="{{ url_for('user.dashboard') }}" role="button">Close</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('releaseModal'));
+        myModal.show();
+    });
+</script>
+{% endblock %}

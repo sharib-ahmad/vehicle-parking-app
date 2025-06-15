@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block title %}Register Vehicle{% endblock %}
+
+{% block main_content %}
+
+<div class="modal fade" id="vehicleModal" tabindex="-1" aria-labelledby="vehicleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="vehicleModalLabel">Register Vehicle</h5>
+                <a href="{{ url_for('user.dashboard') }}" class="btn-close"></a>
+            </div>
+            <div class="modal-body">
+
+                <!-- Your Form Starts Here -->
+                <form method="POST" action="{{ url_for('user.reserve_spot',lot_id=lot.id) }}">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.user_id.label(class="form-label") }}
+                            {{ form.user_id(class="form-control") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.spot_id.label(class="form-label") }}
+                            {{ form.spot_id(class="form-control") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.lot_id.label(class="form-label") }}
+                            {{ form.lot_id(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.vehicle_number.label(class="form-label") }}
+                            {{ form.vehicle_number(class="form-control", id="vehicle_number",
+                            oninput="fetchVehicleInfo()") }}
+
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.fuel_type.label(class="form-label") }}
+                            {{ form.fuel_type(class="form-select",id="fuel_type") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.brand.label(class="form-label") }}
+                            {{ form.brand(class="form-select", id="brand") }}
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            {{ form.model.label(class="form-label") }}
+                            {{ form.model(class="form-select", id="model") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.color.label(class="form-lable")}}
+                            {{ form.color(class="form-select", id="color") }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{ url_for('user.dashboard') }}" class="btn btn-secondary me-2">Close</a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+                <!-- Your Form Ends Here -->
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('vehicleModal'));
+        myModal.show();
+    });
+
+    function fetchVehicleInfo() {
+        const vehicleNumber = document.getElementById("vehicle_number").value;
+        if (vehicleNumber.length < 5) return; // Skip short input
+
+        fetch(`/api/vehicle/${vehicleNumber}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.warn(data.error);
+                    return;
+                }
+                document.getElementById("brand").value = data.brand;
+                document.getElementById("model").value = data.model;
+                document.getElementById("color").value = data.color;
+                document.getElementById("fuel_type").value = data.fuel_type;
+            });
+    }
+</script>
+{% endblock %}
