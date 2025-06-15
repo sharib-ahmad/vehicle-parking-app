@@ -366,4 +366,69 @@ def delete_scheduled_users():
 
     db.session.commit()
 
+# Analytics and Visualizations
+# Generates user-specific analytics and visualizations.
 
+@user_bp.route('/summary')
+@login_required
+def summary():
+    """ 
+    Renders the user summary page.
+    Features:
+    - Displays user statistics and overview
+    - Links to detailed analytics and charts
+    - Shows parking history summary
+    """
+    return render_template('user/summary.html')
+
+@user_bp.route('/chart/parking-spot-summary')
+@login_required
+def parking_spot_summary_chart():
+    """ 
+    Generates a bar chart of amounts invested per parking spot.
+    Features:
+    - Creates matplotlib bar chart visualization
+    - Shows user's spending per parking spot
+    - Returns PNG image response
+    - Handles cases with no data gracefully
+    - Includes proper chart formatting and labels
+    """
+    reservations = ReservedParkingSpot.query.filter_by(user_id=current_user.id).all()
+    spot_numbers, amounts = [], []
+
+    # Data Collection and Processing
+    for r in reservations:
+        if r.payment and r.payment.payment_status == PaymentStatus.PAID:
+            spot_numbers.append(f"Spot({r.parking_spot.spot_number})")
+            amounts.append(r.payment.amount)
+
+    if not spot_numbers:
+        spot_numbers, amounts = ['No Data'], [0]
+
+    # Chart Creation and Styling
+    fig, ax = plt.subplots(figsize=(8, 5))
+    bars = ax.bar(spot_numbers, amounts, color=['#4CAF50', '#2196F3', '#f44336', '#FFC107'])
+
+    ax.set_title("Amount Invested by You per Parking Spot")
+    ax.set_xlabel("Spot Number")
+    ax.set_ylabel("Amount (₹)")
+    ax.yaxis.grid(True, linestyle='--', alpha=0.6)
+
+    # Bar Labels and Formatting
+    for i, bar in enumerate(bars):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width() / 2, height +
+                1, f"₹{amounts[i]:.2f}", ha='center', va='bottom', fontsize=10)
+    ax.set_ylim(0, max(amounts) + 100 if amounts else 100)
+
+    # Image Export and Response
+    fig.tight_layout()
+    canvas = FigureCanvas(fig)
+    img_io = io.BytesIO()
+    canvas.print_png(img_io)
+    img_io.seek(0)
+    plt.close(fig)
+
+    return Response(img_io.getvalue(), mimetype='image/png')
+
+# End of User Controller
