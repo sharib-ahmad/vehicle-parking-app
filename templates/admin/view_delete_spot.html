@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block title %}View/Delete Parking Spot{% endblock %}
+
+{% block main_content %}
+<div class="modal fade" id="viewDeleteModal" tabindex="-1" aria-labelledby="viewDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form method="POST" action="{{ url_for('admin.view_delete_spot', spot_id=spot.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="viewDeleteModalLabel">
+                        View & Delete Parking Spot
+                    </h5>
+                    <a href="{{ url_for('admin.parking_lots') }}" class="btn-close"></a>
+                </div>
+
+                <div class="modal-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Spot ID</strong></label>
+                        <input class="form-control" value="{{ spot.id }}" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Lot ID</strong></label>
+                        <input class="form-control" value="{{ spot.lot_id }}" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Slot No</strong></label>
+                        <input class="form-control" value="{{ spot.spot_number }}" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Status</strong></label>
+                        {% if spot.status.value == 'O' %}
+                        <a href="{{ url_for('admin.occupied_spot_details', spot_id=spot.id) }}" class="text-decoration-none">
+                            <input class="form-control bg-danger text-white" style="cursor: pointer;" value="Occupied">
+                        </a>
+                        {% else %}
+                        <input class="form-control bg-success text-white" value="Available" disabled>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    {{ form.submit(class="btn btn-danger") }}
+                    <a href="{{ url_for('admin.parking_lots') }}" class="btn btn-secondary me-2">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('viewDeleteModal'));
+        myModal.show();
+    });
+</script>
+{% endblock %}

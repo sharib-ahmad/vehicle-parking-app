@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block title %}Summary{% endblock %}
+
+{% block main_content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4 text-warning">Summary shows statistical Charts</h2>
+
+    <div class="row justify-content-center gy-5">
+
+        <!-- Revenue Chart -->
+        <div class="col-12 col-md-6 d-flex flex-column align-items-center">
+            <h3 class="text-center">Revenue from each parking lot</h3>
+            <img src="{{ url_for('admin.revenue_chart') }}" alt="Revenue Chart" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: contain;">
+        </div>
+
+        <!-- Parking Summary Chart -->
+        <div class="col-12 col-md-6 d-flex flex-column align-items-center">
+            <h3 class="text-center">Parking Lot Summary</h3>
+            <img src="{{ url_for('admin.parking_summary_chart') }}" alt="Parking Summary Chart" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: contain;">
+        </div>
+
+    </div>
+</div>
+{% endblock %}

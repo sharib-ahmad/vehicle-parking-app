@@ -1,0 +1,159 @@
+
+/* Headings & text */
+h2,
+h5,
+h6,
+label,
+th,
+td,
+p {
+  color: #f8f9fa;
+}
+
+/* Table styling */
+.table th,
+.table td {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #eaeaea;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Card styles */
+.custom-card {
+  background: rgba(0, 0, 0, 0.35);
+  border: none;
+  border-radius: 2rem;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+  color: #ffffff;
+  padding: 1rem;
+}
+
+.custom-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 255, 200, 0.85); /* bright shadow */
+  cursor: pointer;
+}
+
+.card.custom-card:hover {
+  animation: pulse-glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+  from {
+    box-shadow: 0 12px 24px rgba(0, 255, 195, 0.3),
+      0 0 10px rgba(0, 255, 195, 0.3);
+  }
+  to {
+    box-shadow: 0 12px 30px rgba(0, 255, 195, 0.6),
+      0 0 20px rgba(0, 255, 195, 0.5);
+  }
+}
+
+/* Search bar form */
+input.form-control,
+.form-select {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  color: #1f3941;
+  padding: 10px 15px;
+  font-weight: 500;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+input.form-control:focus {
+  outline: none;
+  border: 2px solid #00e6c1;
+  box-shadow: 0 0 15px rgba(0, 255, 195, 0.5);
+}
+
+input::placeholder {
+  color: #888;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: #00bfa6;
+  color: #fff;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #00ffc3;
+  color: #000;
+  box-shadow: 0 0 10px #00ffc3, 0 0 20px #00ffc3;
+}
+
+.custom-text {
+  color: #fff;
+  background-color: rgb(1, 132, 58);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+.btn-danger {
+  background-color: rgb(228, 51, 51);
+  color : #fff;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-danger:hover {
+  background-color: rgb(225, 103, 103);
+  color: #000;
+  box-shadow: 0 0 10px rgb(225, 103, 103), 0 0 20px rgb(225, 103, 103) ;
+}
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Sticky search bar */
+.custom-sticky-top {
+  background-color: rgba(31, 57, 65, 0.95);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+}
+
+/* Alert box */
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffeeba;
+  border: none;
+  border-radius: 10px;
+}
+
+/* Smooth animation */
+.animate-fade-in {
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Table responsiveness on smaller screens */
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  .btn {
+    font-size: 0.85rem;
+  }
+}
