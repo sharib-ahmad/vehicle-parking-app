@@ -26,3 +26,11 @@ Thumbs.db
 # Compiled files
 *.so
 *.o
+
+#hidden files
+.*.swp
+*.fuse*
+
+#img
+*.png
+*.jpg

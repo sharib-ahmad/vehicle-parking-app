@@ -104,7 +104,7 @@ class ParkingSpot(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(IST))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(IST), onupdate=lambda: datetime.now(IST))
     parking_lot = db.relationship('ParkingLot', back_populates='parking_spots')
-    reservations = db.relationship('ReservedParkingSpot', back_populates='parking_spot', lazy='dynamic', cascade='all, delete-orphan')
+    reservations = db.relationship('ReservedParkingSpot', back_populates='parking_spot', lazy='dynamic', cascade='save-update')
 
     def __repr__(self): return f'<ParkingSpot {self.spot_number} in Lot {self.lot_id}>'
 
@@ -112,7 +112,7 @@ class ParkingSpot(db.Model):
 class ReservedParkingSpot(db.Model):
     __tablename__ = 'reserved_parking_spots'
     id = db.Column(db.Integer, primary_key=True)
-    spot_id = db.Column(db.Integer, db.ForeignKey('parking_spots.id', ondelete='CASCADE'), nullable=False)
+    spot_id = db.Column(db.Integer, db.ForeignKey('parking_spots.id', ondelete='Set NULL'), nullable=True)
     user_id = db.Column(db.String(50), db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     vehicle_number = db.Column(db.String(20), db.ForeignKey('vehicles.vehicle_number', ondelete='CASCADE'))
     reservation_timestamp = db.Column(db.DateTime, default=lambda: datetime.now(IST))
