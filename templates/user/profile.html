@@ -7,7 +7,6 @@ User Profile
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_profile.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<!-- Flatpickr dark theme -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
 {% endblock %}
 
@@ -38,14 +37,20 @@ User Profile
                 {{ form.profile_pic(class="form-control") }}
             </div>
 
+            <!-- Save and Delete Buttons -->
             <div class="d-flex justify-content-between flex-wrap mt-4">
                 {{ form.save_changes(class="btn btn-success px-4 mb-2") }}
+
+                <!-- Trigger modal -->
                 <button type="button" class="btn btn-danger px-4 mb-2" data-bs-toggle="modal"
                     data-bs-target="#deleteModal">
                     Delete Profile
                 </button>
             </div>
         </div>
+
+        <!-- Hidden delete button to trigger from modal -->
+        {{ form.delete_profile(class="d-none", id="hiddenDeleteBtn") }}
     </form>
 </div>
 
@@ -63,10 +68,10 @@ User Profile
             </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form method="POST" action="{{ url_for('user.profile') }}">
-                    {{ form.hidden_tag() }}
-                    {{ form.delete_profile(class="btn btn-danger") }}
-                </form>
+                <!-- Trigger hidden delete button from main form -->
+                <button type="button" class="btn btn-danger" onclick="document.getElementById('hiddenDeleteBtn').click();">
+                    Confirm Delete
+                </button>
             </div>
         </div>
     </div>
@@ -75,7 +80,6 @@ User Profile
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         flatpickr(".datepicker", {

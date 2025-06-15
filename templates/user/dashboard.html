@@ -125,6 +125,7 @@ Vehicle-P | Home
                                 {{ lot.price_per_hour }}</p>
                             <p><i class="fa-solid fa-layer-group me-2 text-info"></i><strong>Floor Level:</strong> {{
                                 lot.floor_level }}</p>
+                            <p><strong>Timing: </strong>{{ lot.open_time.strftime("%I:%M %p") }} - {{ lot.close_time.strftime("%I:%M %p") }}</p>
                             <p class="text-center text-primary">Click on card to register</p>
                         </div>
                     </div>

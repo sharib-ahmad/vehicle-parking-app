@@ -8,13 +8,6 @@ from sqlalchemy import event
 from sqlalchemy.engine import Engine
 import enum
 
-# Ensure SQLite enforces foreign key constraints
-@event.listens_for(Engine, "connect")
-def enable_sqlite_fk(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
-
 # Timezone Configuration
 IST = datetime.now().astimezone().tzinfo
 

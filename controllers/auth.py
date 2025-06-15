@@ -80,50 +80,51 @@ def login():
     - Redirects based on user role (admin or user)
     """
     form = LoginForm()
-    
+
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data.strip()).first()
 
         if user and user.check_password(form.password.data):
-            
-            # Check if the user account is soft-deleted
-            if not user.is_active and user.scheduled_delete_at:
+
+            # If the user account is inactive and scheduled for deletion
+            if not user.is_active:
                 now = datetime.now(user.created_at.tzinfo)
-                
-                if now < user.scheduled_delete_at:
-                    # Cancel deletion if the user logs in before the scheduled deletion date
-                    user.cancel_deletion()
-                    db.session.commit()
-                    flash("Welcome back! Your account deletion was canceled.", "success")
-                    current_app.logger.info(f'Welcome back! {current_user.id} Your account deletion was canceled.')
-                    
+
+                if user.scheduled_delete_at:
+                    if now < user.scheduled_delete_at:
+                        # Recover account
+                        user.cancel_deletion()
+                        db.session.commit()
+                        flash("Welcome back! Your account deletion was canceled.", "success")
+                        current_app.logger.info(f'User {user.id} canceled deletion by logging in.')
+                    else:
+                        # Deletion time has passed, block login
+                        flash("Your account was scheduled for deletion and is now permanently removed.", "danger")
+                        current_app.logger.warning(f'User {user.id} tried to login after deletion time.')
+                        return redirect(url_for('auth.login'))
                 else:
-                    # If deletion time has passed
-                    flash("Your account has already been permanently deleted.", "danger")
-                    current_app.logger.info('Your account has already been permanently deleted.')
+                    # Inactive without a scheduled deletion
+                    flash("Your account is inactive. Please contact support.", "danger")
+                    current_app.logger.warning(f'User {user.id} inactive without scheduled deletion.')
                     return redirect(url_for('auth.login'))
 
-            elif not user.is_active:
-                flash("Your account is inactive. Please contact support.", "danger")
-                current_app.logger.info(f'Your account is inactive. Please contact support.{user.id}')
-                return redirect(url_for('auth.login'))
-
-            # Login the user
+            # ✅ Log the user in
             login_user(user)
             flash("Login successful!", "success")
-            current_app.logger.info(f'Login successful! {current_user.id}')
+            current_app.logger.info(f'User {user.id} logged in successfully.')
 
-            # Redirect based on user role
-            if current_user.is_admin():
+            # Redirect based on role
+            if user.is_admin():
                 return redirect(url_for('admin.parking_lots'))
             else:
                 return redirect(url_for('user.dashboard'))
-                
+
         else:
-            flash("Invalid email or password", "danger")
-            current_app.logger.error('Invalid email or password')
+            flash("Invalid email or password.", "danger")
+            current_app.logger.warning("Login failed due to wrong credentials.")
 
     return render_template('auth/login.html', form=form)
+
 
 # User Logout
 # Manages user logout and session termination.

@@ -15,7 +15,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import requests
 from flask import (Blueprint, Response, current_app, flash, redirect,
                    render_template, request, session, url_for)
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, logout_user
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -61,7 +61,14 @@ def dashboard():
             )
         ).all()
     else:
-        lots = ParkingLot.query.all()
+        now = datetime.now(IST).time()  # get current time
+
+        # Fetch lots that are active and currently open
+        lots = ParkingLot.query.filter(
+            ParkingLot.is_active == True,
+            ParkingLot.open_time <= now,
+            ParkingLot.close_time >= now
+        ).all()
 
     # Get user reservations
     reservations = ReservedParkingSpot.query.filter_by(user_id=current_user.id).order_by(
@@ -134,6 +141,12 @@ def reserve_spot(lot_id):
         flash("Could not load vehicle data. Please try again later.", "danger")
 
     if request.method == 'GET':
+        now = datetime.now(IST).time()
+        if not (lot.open_time <= now <= lot.close_time):
+            flash(f'The parking lot is currently closed. Please try again between {lot.open_time} and {lot.close_time}.', 'danger')
+            current_app.logger.warning(f'User {current_user.id} tried to reserve outside of lot hours {lot_id}')
+            return redirect(url_for('user.dashboard'))
+        
         form.lot_id.data = lot_id
         form.user_id.data = current_user.id
         form.spot_id.data = preselected_spot_id
@@ -143,7 +156,7 @@ def reserve_spot(lot_id):
         if ReservedParkingSpot.query.filter_by(vehicle_number=form.vehicle_number.data, leaving_timestamp=None).first():
             flash(f'You already have an active reservation for vehicle {form.vehicle_number.data}.', 'danger')
             return redirect(url_for('user.dashboard'))
-
+        
         # Insert new vehicle if it doesn't exist
         if not Vehicle.query.filter_by(vehicle_number=form.vehicle_number.data).first():
             new_vehicle = Vehicle(
@@ -335,8 +348,12 @@ def profile():
             flash('Profile updated successfully.', 'success')
         elif form.delete_profile.data:
             current_user.schedule_deletion()
+            user_id = current_user.id
             db.session.commit()
+            logout_user()
             flash('Your profile is scheduled to be deleted in 15 days.', 'warning')
+            current_app.logger.info(f'User {user_id} scheduled profile deletion')
+            return redirect(url_for('auth.login'))
 
         return redirect(url_for('user.profile'))
 
@@ -378,65 +395,63 @@ def summary():
     - Displays amount spent per reservation
     """
     reservations = ReservedParkingSpot.query.filter_by(user_id=current_user.id).order_by(
-        ReservedParkingSpot.reservation_timestamp.desc()).all()
+        ReservedParkingSpot.reservation_timestamp.desc()
+    ).all()
 
     total_spent = sum(
-        r.payment.amount for r in reservations
+        r.payment.amount
+        for r in reservations
         if r.payment and r.payment.payment_status == PaymentStatus.PAID
     )
 
     return render_template(
         'user/summary.html',
         reservations=reservations,
-        total_spent=total_spent
+        total_spent=total_spent or 0.0
     )
-
 
 @user_bp.route('/chart/parking-spot-summary')
 @login_required
 def parking_spot_summary_chart():
     """ 
     Generates a bar chart of amounts invested per parking spot.
-    Features:
-    - Creates matplotlib bar chart visualization
-    - Shows user's spending per parking spot
-    - Returns PNG image response
-    - Handles cases with no data gracefully
-    - Includes proper chart formatting and labels
+    Handles missing/deleted spots gracefully.
     """
     reservations = ReservedParkingSpot.query.filter_by(user_id=current_user.id).all()
-    spot_numbers, amounts = [], []
+    spot_labels, amounts = [], []
 
-    # Data Collection and Processing
     for r in reservations:
         if r.payment and r.payment.payment_status == PaymentStatus.PAID:
-            spot_numbers.append(f"Spot({r.parking_spot.spot_number})")
+            if r.parking_spot:
+                label = f"Spot({r.parking_spot.spot_number})"
+            else:
+                label = "Deleted Spot"
+            spot_labels.append(label)
             amounts.append(r.payment.amount)
 
-    if not spot_numbers:
-        spot_numbers, amounts = ['No Data'], [0]
+    if not spot_labels:
+        spot_labels, amounts = ['No Data'], [0]
 
-    # Chart Creation and Styling
+    # Create chart
     fig, ax = plt.subplots(figsize=(8, 5))
-    bars = ax.bar(spot_numbers, amounts, color=['#4CAF50', '#2196F3', '#f44336', '#FFC107'])
+    bars = ax.bar(spot_labels, amounts, color=['#4CAF50', '#2196F3', '#f44336', '#FFC107'])
 
     ax.set_title("Amount Invested by You per Parking Spot")
-    ax.set_xlabel("Spot Number")
+    ax.set_xlabel("Spot")
     ax.set_ylabel("Amount (₹)")
     ax.yaxis.grid(True, linestyle='--', alpha=0.6)
 
-    # Bar Labels and Formatting
     for i, bar in enumerate(bars):
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2, height +
-                1, f"₹{amounts[i]:.2f}", ha='center', va='bottom', fontsize=10)
-    ax.set_ylim(0, max(amounts) + 100 if amounts else 100)
+        ax.text(bar.get_x() + bar.get_width() / 2, height + 1,
+                f"₹{amounts[i]:.2f}", ha='center', va='bottom', fontsize=10)
 
-    # Image Export and Response
+    ax.set_ylim(0, max(amounts) + 100 if amounts else 100)
     fig.tight_layout()
-    canvas = FigureCanvas(fig)
+
+    # Return image response
     img_io = io.BytesIO()
-    canvas.print_png(img_io)
+    FigureCanvas(fig).print_png(img_io)
     img_io.seek(0)
     plt.close(fig)
 
