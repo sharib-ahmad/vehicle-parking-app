@@ -34,6 +34,7 @@ def register_blueprints(app):
     
     # API Blueprint
     app.register_blueprint(api_bp, url_prefix='/api')
+    app.logger.info("API resources registered successfully")
     
     # Local/Public Blueprint
     app.register_blueprint(local_bp)

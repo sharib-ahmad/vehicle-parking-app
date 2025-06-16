@@ -31,9 +31,12 @@ def admin_required(f):
     @login_required
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
+            current_app.logger.warning(f"Unauthorized access attempt to {f.__name__}")
             abort(401, message="Authentication required")
         if not current_user.is_admin():
+            current_app.logger.warning(f"Non-admin user {current_user.id} attempted to access {f.__name__}")
             abort(403, message="Admin access required")
+        current_app.logger.info(f"Admin {current_user.id} accessed {f.__name__}")
         return f(*args, **kwargs)
     return decorated_function
 
@@ -67,63 +70,114 @@ class UserApi(Resource):
     @admin_required
     def get(self, user_id=None):
         """Fetches a single user or all users."""
-        if user_id:
-            user = User.query.get(user_id)
-            if not user:
-                abort(404, message="User not found")
-            return user
-        else:
-            return User.query.filter_by(role=UserRole.USER).all()
+        try:
+            current_app.logger.info(f"GET request for users - user_id: {user_id}")
+            
+            if user_id:
+                user = User.query.get(user_id)
+                if not user:
+                    current_app.logger.warning(f"User not found: {user_id}")
+                    abort(404, message="User not found")
+                current_app.logger.info(f"Successfully retrieved user: {user_id}")
+                return user
+            else:
+                users = User.query.filter_by(role=UserRole.USER).all()
+                current_app.logger.info(f"Successfully retrieved {len(users)} users")
+                return users
+        except Exception as e:
+            current_app.logger.error(f"Error in UserApi GET: {str(e)}")
+            abort(500, message="Internal server error")
 
     @marshal_with(user_fields)
     def post(self):
         """Creates a new user."""
-        args = user_args.parse_args()
-        if User.query.filter_by(email=args['email']).first():
-            abort(400, message="Email already exists")
+        try:
+            args = user_args.parse_args()
+            current_app.logger.info(f"POST request to create user with email: {args['email']}")
+            
+            if User.query.filter_by(email=args['email']).first():
+                current_app.logger.warning(f"Attempt to create user with existing email: {args['email']}")
+                abort(400, message="Email already exists")
 
-        new_user = User(
-            id='@' + args['email'].split('@')[0] + str(random.randint(100, 999)),
-            full_name=args['full_name'],
-            email=args['email'],
-            password_hash=generate_password_hash(args['password']),
-            phone_number=args.get('phone_number'),
-            address=args.get('address'),
-            pin_code=args.get('pin_code')
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        return new_user, 201
+            new_user_id = '@' + args['email'].split('@')[0] + str(random.randint(100, 999))
+            new_user = User(
+                id=new_user_id,
+                full_name=args['full_name'],
+                email=args['email'],
+                password_hash=generate_password_hash(args['password']),
+                phone_number=args.get('phone_number'),
+                address=args.get('address'),
+                pin_code=args.get('pin_code')
+            )
+            
+            db.session.add(new_user)
+            db.session.commit()
+            
+            current_app.logger.info(f"Successfully created user: {new_user_id}")
+            return new_user, 201
+            
+        except Exception as e:
+            current_app.logger.error(f"Error creating user: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
     @marshal_with(user_fields)
     @login_required
     def put(self, user_id):
         """Updates a user's information."""
-        args = user_args.parse_args()
-        user = User.query.get(user_id)
-        if not user:
-            abort(404, message="User not found")
+        try:
+            current_app.logger.info(f"PUT request to update user: {user_id}")
+            args = user_args.parse_args()
+            user = User.query.get(user_id)
+            
+            if not user:
+                current_app.logger.warning(f"Attempt to update non-existent user: {user_id}")
+                abort(404, message="User not found")
 
-        user.full_name = args['full_name']
-        user.phone_number = args.get('phone_number')
-        user.address = args.get('address')
-        user.pin_code = args.get('pin_code')
-        if args.get('password'):
-            user.password_hash = generate_password_hash(args['password'])
+            # Check authorization
+            if not current_user.is_admin() and current_user.id != user_id:
+                current_app.logger.warning(f"Unauthorized attempt to update user {user_id} by user {current_user.id}")
+                abort(403, message="Not authorized to update this user")
 
-        db.session.commit()
-        return user, 200
+            user.full_name = args['full_name']
+            user.phone_number = args.get('phone_number')
+            user.address = args.get('address')
+            user.pin_code = args.get('pin_code')
+            
+            if args.get('password'):
+                user.password_hash = generate_password_hash(args['password'])
+                current_app.logger.info(f"Password updated for user: {user_id}")
+
+            db.session.commit()
+            current_app.logger.info(f"Successfully updated user: {user_id}")
+            return user, 200
+            
+        except Exception as e:
+            current_app.logger.error(f"Error updating user {user_id}: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
     @admin_required
     def delete(self, user_id):
         """Deletes a user."""
-        user = User.query.get(user_id)
-        if not user:
-            abort(404, message="User not found")
+        try:
+            current_app.logger.info(f"DELETE request for user: {user_id}")
+            user = User.query.get(user_id)
+            
+            if not user:
+                current_app.logger.warning(f"Attempt to delete non-existent user: {user_id}")
+                abort(404, message="User not found")
 
-        db.session.delete(user)
-        db.session.commit()
-        return {"message": "User deleted successfully"}, 200
+            db.session.delete(user)
+            db.session.commit()
+            
+            current_app.logger.info(f"Successfully deleted user: {user_id}")
+            return {"message": "User deleted successfully"}, 200
+            
+        except Exception as e:
+            current_app.logger.error(f"Error deleting user {user_id}: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
 # Parking Lot API Resource
 # Manages parking lot operations such as fetching, creating, updating, and deleting parking lots.
@@ -164,62 +218,109 @@ class ParkingLotApi(Resource):
     @marshal_with(parking_fields)
     def get(self, lot_id=None):
         """Fetches a single parking lot or all parking lots."""
-        if lot_id:
-            lot = ParkingLot.query.get(lot_id)
-            if not lot:
-                abort(404, message="Parking lot not found")
-            return lot
-        else:
-            return ParkingLot.query.all()
+        try:
+            current_app.logger.info(f"GET request for parking lots - lot_id: {lot_id}")
+            
+            if lot_id:
+                lot = ParkingLot.query.get(lot_id)
+                if not lot:
+                    current_app.logger.warning(f"Parking lot not found: {lot_id}")
+                    abort(404, message="Parking lot not found")
+                current_app.logger.info(f"Successfully retrieved parking lot: {lot_id}")
+                return lot
+            else:
+                lots = ParkingLot.query.all()
+                current_app.logger.info(f"Successfully retrieved {len(lots)} parking lots")
+                return lots
+                
+        except Exception as e:
+            current_app.logger.error(f"Error in ParkingLotApi GET: {str(e)}")
+            abort(500, message="Internal server error")
 
     @marshal_with(parking_fields)
     @admin_required
     def post(self):
         """Creates a new parking lot."""
-        args = parking_args.parse_args()
-        new_lot = ParkingLot(
-            name=args['name'],
-            prime_location_name=args['prime_location_name'],
-            price_per_hour=args['price_per_hour'],
-            address=args['address'],
-            pin_code=args['pin_code'],
-            floor_level=args.get('floor_level', 1),
-            maximum_number_of_spots=args['maximum_number_of_spots'],
-            is_active=args.get('is_active', True),
-            open_time=datetime.strptime(args['open_time'], "%H:%M").time() if args.get('open_time') else None,
-            close_time=datetime.strptime(
-                args['close_time'], "%H:%M").time() if args.get('close_time') else None
-        )
-        db.session.add(new_lot)
-        db.session.commit()
-        return new_lot, 201
+        try:
+            args = parking_args.parse_args()
+            current_app.logger.info(f"POST request to create parking lot: {args['name']}")
+            
+            new_lot = ParkingLot(
+                name=args['name'],
+                prime_location_name=args['prime_location_name'],
+                price_per_hour=args['price_per_hour'],
+                address=args['address'],
+                pin_code=args['pin_code'],
+                floor_level=args.get('floor_level', 1),
+                maximum_number_of_spots=args['maximum_number_of_spots'],
+                is_active=args.get('is_active', True),
+                open_time=datetime.strptime(args['open_time'], "%H:%M").time() if args.get('open_time') else None,
+                close_time=datetime.strptime(args['close_time'], "%H:%M").time() if args.get('close_time') else None
+            )
+            
+            db.session.add(new_lot)
+            db.session.commit()
+            
+            current_app.logger.info(f"Successfully created parking lot: {new_lot.id} - {new_lot.name}")
+            return new_lot, 201
+            
+        except Exception as e:
+            current_app.logger.error(f"Error creating parking lot: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
     @marshal_with(parking_fields)
     @admin_required
     def put(self, lot_id):
         """Updates a parking lot's information."""
-        args = parking_args.parse_args()
-        lot = ParkingLot.query.get(lot_id)
-        if not lot:
-            abort(404, message="Parking lot not found")
+        try:
+            current_app.logger.info(f"PUT request to update parking lot: {lot_id}")
+            args = parking_args.parse_args()
+            lot = ParkingLot.query.get(lot_id)
+            
+            if not lot:
+                current_app.logger.warning(f"Attempt to update non-existent parking lot: {lot_id}")
+                abort(404, message="Parking lot not found")
 
-        for key, value in args.items():
-            if value is not None:
-                setattr(lot, key, value)
+            allowed_fields = ['open_time', 'close_time', 'price_per_hour', 'is_active']
 
-        db.session.commit()
-        return lot, 200
+            for key in allowed_fields:
+                value = args.get(key)
+                if value is not None:
+                    if key in ['open_time', 'close_time']:
+                        value = datetime.strptime(value, "%H:%M").time()
+                    setattr(lot, key, value)
+
+            db.session.commit()
+            current_app.logger.info(f"Successfully updated parking lot: {lot_id}")
+            return lot, 200
+            
+        except Exception as e:
+            current_app.logger.error(f"Error updating parking lot {lot_id}: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
     @admin_required
     def delete(self, lot_id):
         """Deletes a parking lot."""
-        lot = ParkingLot.query.get(lot_id)
-        if not lot:
-            abort(404, message="Parking lot not found")
+        try:
+            current_app.logger.info(f"DELETE request for parking lot: {lot_id}")
+            lot = ParkingLot.query.get(lot_id)
+            
+            if not lot:
+                current_app.logger.warning(f"Attempt to delete non-existent parking lot: {lot_id}")
+                abort(404, message="Parking lot not found")
 
-        db.session.delete(lot)
-        db.session.commit()
-        return {'message': 'Parking lot deleted successfully'}, 200
+            db.session.delete(lot)
+            db.session.commit()
+            
+            current_app.logger.info(f"Successfully deleted parking lot: {lot_id}")
+            return {'message': 'Parking lot deleted successfully'}, 200
+            
+        except Exception as e:
+            current_app.logger.error(f"Error deleting parking lot {lot_id}: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
 # Parking Spot API Resource
 # Manages parking spot operations such as fetching, updating, and deleting parking spots.
@@ -249,40 +350,75 @@ class ParkingSpotApi(Resource):
     @marshal_with(spot_fields)
     def get(self, spot_id=None):
         """Fetches a single parking spot or all parking spots."""
-        if spot_id:
-            spot = ParkingSpot.query.get(spot_id)
-            if not spot:
-                abort(404, message="Parking spot not found")
-            return spot
-        else:
-            return ParkingSpot.query.all()
+        try:
+            current_app.logger.info(f"GET request for parking spots - spot_id: {spot_id}")
+            
+            if spot_id:
+                spot = ParkingSpot.query.get(spot_id)
+                if not spot:
+                    current_app.logger.warning(f"Parking spot not found: {spot_id}")
+                    abort(404, message="Parking spot not found")
+                current_app.logger.info(f"Successfully retrieved parking spot: {spot_id}")
+                return spot
+            else:
+                spots = ParkingSpot.query.all()
+                current_app.logger.info(f"Successfully retrieved {len(spots)} parking spots")
+                return spots
+                
+        except Exception as e:
+            current_app.logger.error(f"Error in ParkingSpotApi GET: {str(e)}")
+            abort(500, message="Internal server error")
 
     @marshal_with(spot_fields)
     @admin_required
     def put(self, spot_id):
         """Updates a parking spot's information."""
-        args = spot_args.parse_args()
-        spot = ParkingSpot.query.get(spot_id)
-        if not spot:
-            abort(404, message="Parking spot not found")
+        try:
+            current_app.logger.info(f"PUT request to update parking spot: {spot_id}")
+            args = spot_args.parse_args()
+            spot = ParkingSpot.query.get(spot_id)
+            
+            if not spot:
+                current_app.logger.warning(f"Attempt to update non-existent parking spot: {spot_id}")
+                abort(404, message="Parking spot not found")
 
-        for key, value in args.items():
-            if value is not None:
-                setattr(spot, key, value)
+            # Update fields
+            for key, value in args.items():
+                if value is not None:
+                    if key == 'status':
+                        value = SpotStatus[value]
+                    setattr(spot, key, value)
 
-        db.session.commit()
-        return spot, 200
+            db.session.commit()
+            current_app.logger.info(f"Successfully updated parking spot: {spot_id}")
+            return spot, 200
+            
+        except Exception as e:
+            current_app.logger.error(f"Error updating parking spot {spot_id}: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
     @admin_required
     def delete(self, spot_id):
         """Deletes a parking spot."""
-        spot = ParkingSpot.query.get(spot_id)
-        if not spot:
-            abort(404, message="Parking spot not found")
+        try:
+            current_app.logger.info(f"DELETE request for parking spot: {spot_id}")
+            spot = ParkingSpot.query.get(spot_id)
+            
+            if not spot:
+                current_app.logger.warning(f"Attempt to delete non-existent parking spot: {spot_id}")
+                abort(404, message="Parking spot not found")
 
-        db.session.delete(spot)
-        db.session.commit()
-        return {'message': 'Parking spot deleted successfully'}, 200
+            db.session.delete(spot)
+            db.session.commit()
+            
+            current_app.logger.info(f"Successfully deleted parking spot: {spot_id}")
+            return {'message': 'Parking spot deleted successfully'}, 200
+            
+        except Exception as e:
+            current_app.logger.error(f"Error deleting parking spot {spot_id}: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
 # Vehicle API Resource
 # Manages vehicle operations such as fetching, creating, updating, and deleting vehicles.
@@ -291,7 +427,7 @@ class ParkingSpotApi(Resource):
 vehicle_args = reqparse.RequestParser()
 vehicle_args.add_argument('vehicle_number', type=str, required=True, help='Vehicle number is required')
 vehicle_args.add_argument('fuel_type', type=str, required=True, help='Fuel type is required')
-vehicle_args.add_argument('user_id', type=int, required=True, help='User ID is required')
+vehicle_args.add_argument('user_id', type=str, required=True, help='User ID is required')
 vehicle_args.add_argument('color', type=str, required=True, help='Color is required')
 vehicle_args.add_argument('model', type=str, required=True, help='Model is required')
 vehicle_args.add_argument('brand', type=str, required=True, help='Brand is required')
@@ -311,63 +447,118 @@ class VehicleApi(Resource):
     @login_required
     def get(self, vehicle_number=None):
         """Fetches a single vehicle or all vehicles."""
-        if vehicle_number:
-            vehicle = Vehicle.query.get(vehicle_number)
-            if not vehicle:
-                abort(404, message="Vehicle not found")
-            if not current_user.is_admin() and vehicle.user_id != current_user.id:
-                abort(403, message="Not authorized to view this vehicle")
-            return vehicle
-        else:
-            if current_user.is_admin():
-                return Vehicle.query.all()
-            return Vehicle.query.filter_by(user_id=current_user.id).all()
+        try:
+            current_app.logger.info(f"GET request for vehicles - vehicle_number: {vehicle_number}")
+            
+            if vehicle_number:
+                vehicle = Vehicle.query.get(vehicle_number)
+                if not vehicle:
+                    current_app.logger.warning(f"Vehicle not found: {vehicle_number}")
+                    abort(404, message="Vehicle not found")
+                    
+                if not current_user.is_admin() and vehicle.user_id != current_user.id:
+                    current_app.logger.warning(f"Unauthorized access to vehicle {vehicle_number} by user {current_user.id}")
+                    abort(403, message="Not authorized to view this vehicle")
+                    
+                current_app.logger.info(f"Successfully retrieved vehicle: {vehicle_number}")
+                return vehicle
+            else:
+                if current_user.is_admin():
+                    vehicles = Vehicle.query.all()
+                    current_app.logger.info(f"Admin retrieved {len(vehicles)} vehicles")
+                else:
+                    vehicles = Vehicle.query.filter_by(user_id=current_user.id).all()
+                    current_app.logger.info(f"User {current_user.id} retrieved {len(vehicles)} vehicles")
+                return vehicles
+                
+        except Exception as e:
+            current_app.logger.error(f"Error in VehicleApi GET: {str(e)}")
+            abort(500, message="Internal server error")
 
     @marshal_with(vehicle_fields)
     @login_required
     def post(self):
         """Creates a new vehicle."""
-        args = vehicle_args.parse_args()
-        if Vehicle.query.get(args['vehicle_number']):
-            abort(400, message="Vehicle already exists")
-        if not current_user.is_admin() and args['user_id'] != current_user.id:
-            abort(403, message="You can only register your own vehicle")
+        try:
+            args = vehicle_args.parse_args()
+            current_app.logger.info(f"POST request to create vehicle: {args['vehicle_number']}")
+            
+            if Vehicle.query.get(args['vehicle_number']):
+                current_app.logger.warning(f"Attempt to create existing vehicle: {args['vehicle_number']}")
+                abort(400, message="Vehicle already exists")
+                
+            if not current_user.is_admin() and args['user_id'] != current_user.id:
+                current_app.logger.warning(f"User {current_user.id} attempted to register vehicle for another user: {args['user_id']}")
+                abort(403, message="You can only register your own vehicle")
 
-        new_vehicle = Vehicle(**args)
-        db.session.add(new_vehicle)
-        db.session.commit()
-        return new_vehicle, 201
+            new_vehicle = Vehicle(**args)
+            db.session.add(new_vehicle)
+            db.session.commit()
+            
+            current_app.logger.info(f"Successfully created vehicle: {args['vehicle_number']}")
+            return new_vehicle, 201
+            
+        except Exception as e:
+            current_app.logger.error(f"Error creating vehicle: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
     @marshal_with(vehicle_fields)
     @login_required
     def put(self, vehicle_number):
         """Updates a vehicle's information."""
-        args = vehicle_args.parse_args()
-        vehicle = Vehicle.query.get(vehicle_number)
-        if not vehicle:
-            abort(404, message="Vehicle not found")
-        if not current_user.is_admin() and vehicle.user_id != current_user.id:
-            abort(403, message="Not authorized to update this vehicle")
+        try:
+            current_app.logger.info(f"PUT request to update vehicle: {vehicle_number}")
+            args = vehicle_args.parse_args()
+            vehicle = Vehicle.query.get(vehicle_number)
+            
+            if not vehicle:
+                current_app.logger.warning(f"Attempt to update non-existent vehicle: {vehicle_number}")
+                abort(404, message="Vehicle not found")
+                
+            if not current_user.is_admin() and vehicle.user_id != current_user.id:
+                current_app.logger.warning(f"Unauthorized attempt to update vehicle {vehicle_number} by user {current_user.id}")
+                abort(403, message="Not authorized to update this vehicle")
 
-        for key, value in args.items():
-            if value is not None and key != 'user_id':
-                setattr(vehicle, key, value)
-        if current_user.is_admin():
-            vehicle.user_id = args['user_id']
+            # Update fields (except user_id for non-admin users)
+            for key, value in args.items():
+                if value is not None and key != 'user_id':
+                    setattr(vehicle, key, value)
+                    
+            # Only admin can change vehicle ownership
+            if current_user.is_admin():
+                vehicle.user_id = args['user_id']
 
-        db.session.commit()
-        return vehicle, 200
+            db.session.commit()
+            current_app.logger.info(f"Successfully updated vehicle: {vehicle_number}")
+            return vehicle, 200
+            
+        except Exception as e:
+            current_app.logger.error(f"Error updating vehicle {vehicle_number}: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
     @admin_required
     def delete(self, vehicle_number):
         """Deletes a vehicle."""
-        vehicle = Vehicle.query.get(vehicle_number)
-        if not vehicle:
-            abort(404, message="Vehicle not found")
+        try:
+            current_app.logger.info(f"DELETE request for vehicle: {vehicle_number}")
+            vehicle = Vehicle.query.get(vehicle_number)
+            
+            if not vehicle:
+                current_app.logger.warning(f"Attempt to delete non-existent vehicle: {vehicle_number}")
+                abort(404, message="Vehicle not found")
 
-        db.session.delete(vehicle)
-        db.session.commit()
-        return {'message': f'Vehicle {vehicle_number} deleted successfully'}, 200
+            db.session.delete(vehicle)
+            db.session.commit()
+            
+            current_app.logger.info(f"Successfully deleted vehicle: {vehicle_number}")
+            return {'message': f'Vehicle {vehicle_number} deleted successfully'}, 200
+            
+        except Exception as e:
+            current_app.logger.error(f"Error deleting vehicle {vehicle_number}: {str(e)}")
+            db.session.rollback()
+            abort(500, message="Internal server error")
 
 # API Resource Routing
 # Registers API resources with their respective endpoints.
