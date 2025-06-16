@@ -7,7 +7,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (
     StringField, PasswordField, SubmitField, SelectField, IntegerField, FloatField,
-    BooleanField, TextAreaField, TimeField, DateTimeField, HiddenField, DateField, FileField
+    TextAreaField, TimeField, DateTimeField, HiddenField, DateField, FileField
 )
 from wtforms.validators import (
     DataRequired, Email, Length, EqualTo, ValidationError, NumberRange

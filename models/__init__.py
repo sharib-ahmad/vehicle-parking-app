@@ -28,7 +28,7 @@ from .model import (
 
 
 # Form Imports
-# Imports all Flask-WTF forms for user input validation.
+# Imports all Flask-WTF forms for user and admin input validation.
 
 from .forms import (
     RegistrationForm, LoginForm, ParkingLotForm, EditParkingLotForm, CsrfOnlyForms,
