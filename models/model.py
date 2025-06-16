@@ -150,7 +150,7 @@ class Vehicle(db.Model):
     reservations = db.relationship('ReservedParkingSpot', back_populates='vehicle', cascade='all, delete-orphan')
     def __repr__(self): return f"<Vehicle {self.vehicle_number}>"
 
-# Admin Seeder
+# Automatic Admin Creation
 def create_admin_user(app):
     with app.app_context():
         if not User.query.filter_by(role=UserRole.ADMIN).first():
