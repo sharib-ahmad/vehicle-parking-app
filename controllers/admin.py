@@ -6,6 +6,7 @@
 """
 
 import io
+import pandas as pd
 from datetime import datetime
 from functools import wraps
 
@@ -393,5 +394,66 @@ def parking_summary_chart():
     plt.close(fig)
 
     return Response(img_io.getvalue(), mimetype='image/png')
+
+@admin_bp.route('/download/parking-lot-summary')
+@admin_required
+def download_parking_lot_summary():
+    """
+    Generates an Excel file summarizing parking lots with revenue and spot stats including floor, open/close time.
+    """
+    lots = ParkingLot.query.all()
+    data = []
+    total_revenue = 0
+
+    for lot in lots:
+        name = lot.name
+        floor = lot.floor_level
+        open_time = lot.open_time.strftime('%H:%M') if lot.open_time else "N/A"
+        close_time = lot.close_time.strftime('%H:%M') if lot.close_time else "N/A"
+        available = lot.available_spots_count()
+        occupied = lot.occupied_spots
+        max_spots = lot.maximum_number_of_spots
+        revenue = lot.revenue
+        total_revenue += revenue
+
+        data.append({
+            "Parking Lot": name,
+            "Floor Level": floor,
+            "Open Time": open_time,
+            "Close Time": close_time,
+            "Available Spots": available,
+            "Occupied Spots": occupied,
+            "Total Spots": max_spots,
+            "Revenue (₹)": revenue
+        })
+
+    if not data:
+        data = [{
+            "Parking Lot": "No Data",
+            "Floor Level": "N/A",
+            "Open Time": "N/A",
+            "Close Time": "N/A",
+            "Available Spots": 0,
+            "Occupied Spots": 0,
+            "Total Spots": 0,
+            "Revenue (₹)": 0.0
+        }]
+
+    df = pd.DataFrame(data)
+
+    # Add total revenue row
+    df.loc[len(df.index)] = ["", "", "", "", "", "", "Total Revenue", total_revenue]
+
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Lot Summary')
+
+    output.seek(0)
+    return Response(
+        output.getvalue(),
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        headers={"Content-Disposition": "attachment;filename=parking_lot_summary_admin.xlsx"}
+    )
+
 
 # End of Admin Controller

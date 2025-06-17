@@ -8,6 +8,7 @@ import io
 import os
 import random
 from datetime import datetime
+import pandas as pd
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -456,5 +457,72 @@ def parking_spot_summary_chart():
     plt.close(fig)
 
     return Response(img_io.getvalue(), mimetype='image/png')
+
+@user_bp.route('/download/parking-spot-summary')
+@login_required
+def download_parking_spot_summary():
+    """
+    Returns a detailed Excel summary of user's parking history.
+    """
+    reservations = ReservedParkingSpot.query.filter_by(user_id=current_user.id).all()
+    data = []
+    total_spent = 0
+
+    for r in reservations:
+        if r.payment and r.payment.payment_status == PaymentStatus.PAID:
+            spot = f"Spot({r.parking_spot.spot_number})" if r.parking_spot else "Deleted Spot"
+            vehicle = r.vehicle_number or "N/A"
+
+            start_time = r.parking_timestamp.strftime('%Y-%m-%d %H:%M') if r.parking_timestamp else 'N/A'
+            end_time = r.leaving_timestamp.strftime('%Y-%m-%d %H:%M') if r.leaving_timestamp else 'N/A'
+
+            # Calculate duration
+            if r.parking_timestamp and r.leaving_timestamp:
+                duration = r.leaving_timestamp - r.parking_timestamp
+                duration_str = str(duration)
+            else:
+                duration_str = 'N/A'
+
+            amount = r.payment.amount
+            total_spent += amount
+
+            payment_time = r.payment.payment_timestamp.strftime('%Y-%m-%d %H:%M') if r.payment.payment_timestamp else 'N/A'
+
+            data.append({
+                "Parking Spot": spot,
+                "Vehicle Number": vehicle,
+                "Parking Time": start_time,
+                "Leaving Time": end_time,
+                "Duration": duration_str,
+                "Amount Paid (₹)": amount,
+                "Payment Time": payment_time
+            })
+
+    if not data:
+        data = [{
+            "Parking Spot": "No Data",
+            "Vehicle Number": "N/A",
+            "Paking Time": "N/A",
+            "Leaving Time": "N/A",
+            "Duration": "N/A",
+            "Amount Paid (₹)": 0,
+            "Payment Time": "N/A"
+        }]
+
+    df = pd.DataFrame(data)
+
+    # Add total at the end
+    df.loc[len(df.index)] = ["", "", "", "", "Total", total_spent, ""]
+
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Parking Summary')
+
+    output.seek(0)
+    return Response(
+        output.getvalue(),
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        headers={"Content-Disposition": "attachment;filename=parking_summary_detailed.xlsx"}
+    )
 
 # End of User Controller
