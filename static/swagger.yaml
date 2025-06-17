@@ -1,0 +1,1076 @@
+openapi: 3.0.3
+info:
+  title: Parking Management System API
+  description: |
+    # 🚗 Vehicle Parking Management System (VPMS) API
+    
+    This is the **RESTful API** for the Vehicle Parking Management System, designed for managing:
+    
+    - 🅿️ Parking lots
+    - 🚘 Parking spots
+    - 👤 Users and roles (admin & normal user)
+    - 🚗 Vehicle records
+
+    ## 🌐 Styling and Design Highlights:
+    - Clean, responsive Bootstrap 5 layout.
+    - Font Awesome icons for better UX.
+    - Dark theme with high-contrast highlights.
+    - Profile section with circular images.
+    - Custom navbar with dynamic content (based on login role).
+    - Car loading animation shown on page render.
+
+    ## 📊 Admin Dashboard Features:
+    - Real-time stats with summary charts.
+    - Admin-only controls: add/update/delete lots and users.
+    - Detailed tables with pagination (if applied).
+    - Search functionality for vehicles and users.
+
+    ## 🧑‍💻 Authentication Note:
+    This API uses **Flask-Login** session-based authentication. 
+    - To access the API via Swagger UI, first log in through the main web app.
+    - Swagger uses your browser session cookie to make authenticated requests.
+    
+    ❗ For direct API calls (e.g., via Postman or code), ensure you're authenticated through the login endpoint or have a valid session.
+
+    ## 📷 Entity-Relationship Diagram (ERD):
+    ![ERD](http://127.0.0.1:5000/static/images/erd.png)
+    ## 📜 License
+    ---
+    Built with ❤️ by **Sharib Ahmad** (Roll No. 24f2001786)
+
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: 24f2001786@ds.study.iitm.ac.in
+
+servers:
+  - url: /api
+    description: Current server (relative to your domain)
+
+tags:
+  - name: Users
+    description: User management operations
+  - name: Parking Lots
+    description: Parking lot management operations
+  - name: Parking Spots
+    description: Parking spot management operations
+  - name: Vehicles
+    description: Vehicle management operations
+
+components:
+  securitySchemes:
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+      description: |
+        Flask-Login session cookie authentication.
+        Login through the web application first, then the session cookie will be automatically included.
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique user identifier
+          example: "@john123"
+        full_name:
+          type: string
+          description: User's full name
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "john.doe@example.com"
+        phone_number:
+          type: string
+          nullable: true
+          description: User's phone number
+          example: "+1234567890"
+        address:
+          type: string
+          nullable: true
+          description: User's address
+          example: "123 Main St, City"
+        pin_code:
+          type: string
+          nullable: true
+          description: User's postal code
+          example: "12345"
+        is_active:
+          type: boolean
+          description: Whether user account is active
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    UserInput:
+      type: object
+      required:
+        - full_name
+        - email
+        - password
+      properties:
+        full_name:
+          type: string
+          description: User's full name
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "john.doe@example.com"
+        password:
+          type: string
+          format: password
+          description: User's password
+          example: "securePassword123"
+        phone_number:
+          type: string
+          description: User's phone number
+          example: "+1234567890"
+        address:
+          type: string
+          description: User's address
+          example: "123 Main St, City"
+        pin_code:
+          type: string
+          description: User's postal code
+          example: "12345"
+
+    ParkingLot:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique parking lot identifier
+          example: 1
+        name:
+          type: string
+          description: Parking lot name
+          example: "Downtown Parking"
+        prime_location_name:
+          type: string
+          description: Prime location identifier
+          example: "City Center"
+        price_per_hour:
+          type: number
+          format: float
+          description: Hourly parking rate
+          example: 5.50
+        address:
+          type: string
+          description: Parking lot address
+          example: "456 Downtown Ave"
+        pin_code:
+          type: string
+          description: Postal code
+          example: "12345"
+        floor_level:
+          type: integer
+          description: Floor level of parking lot
+          example: 1
+        maximum_number_of_spots:
+          type: integer
+          description: Total number of parking spots
+          example: 100
+        revenue:
+          type: number
+          format: float
+          description: Total revenue generated
+          example: 1250.75
+        is_active:
+          type: boolean
+          description: Whether parking lot is active
+          example: true
+        open_time:
+          type: string
+          nullable: true
+          description: Opening time
+          example: "08:00"
+        close_time:
+          type: string
+          nullable: true
+          description: Closing time
+          example: "22:00"
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    ParkingLotInput:
+      type: object
+      required:
+        - name
+        - prime_location_name
+        - price_per_hour
+        - address
+        - pin_code
+        - maximum_number_of_spots
+      properties:
+        name:
+          type: string
+          description: Parking lot name
+          example: "Downtown Parking"
+        prime_location_name:
+          type: string
+          description: Prime location identifier
+          example: "City Center"
+        price_per_hour:
+          type: number
+          format: float
+          description: Hourly parking rate
+          example: 5.50
+        address:
+          type: string
+          description: Parking lot address
+          example: "456 Downtown Ave"
+        pin_code:
+          type: string
+          description: Postal code
+          example: "12345"
+        floor_level:
+          type: integer
+          description: Floor level of parking lot
+          example: 1
+        maximum_number_of_spots:
+          type: integer
+          description: Total number of parking spots
+          example: 100
+        is_active:
+          type: boolean
+          description: Whether parking lot is active
+          example: true
+        open_time:
+          type: string
+          description: Opening time (HH:MM format)
+          example: "08:00"
+        close_time:
+          type: string
+          description: Closing time (HH:MM format)
+          example: "22:00"
+
+    ParkingSpot:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique parking spot identifier
+          example: 1
+        spot_number:
+          type: string
+          description: Spot number/identifier
+          example: "A1"
+        lot_id:
+          type: integer
+          description: Associated parking lot ID
+          example: 1
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, RESERVED, MAINTENANCE]
+          description: Current spot status
+          example: "AVAILABLE"
+        is_covered:
+          type: boolean
+          description: Whether spot is covered
+          example: true
+        revenue:
+          type: number
+          format: float
+          description: Revenue generated by this spot
+          example: 45.50
+        is_active:
+          type: boolean
+          description: Whether spot is active
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    ParkingSpotInput:
+      type: object
+      required:
+        - spot_number
+        - lot_id
+      properties:
+        spot_number:
+          type: string
+          description: Spot number/identifier
+          example: "A1"
+        lot_id:
+          type: integer
+          description: Associated parking lot ID
+          example: 1
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, RESERVED, MAINTENANCE]
+          description: Current spot status
+          example: "AVAILABLE"
+        is_covered:
+          type: boolean
+          description: Whether spot is covered
+          example: true
+        is_active:
+          type: boolean
+          description: Whether spot is active
+          example: true
+
+    Vehicle:
+      type: object
+      properties:
+        vehicle_number:
+          type: string
+          description: Vehicle license plate number
+          example: "ABC123"
+        fuel_type:
+          type: string
+          description: Vehicle fuel type
+          example: "Gasoline"
+        user_id:
+          type: string
+          description: Owner's user ID
+          example: "@john123"
+        color:
+          type: string
+          description: Vehicle color
+          example: "Blue"
+        model:
+          type: string
+          description: Vehicle model
+          example: "Camry"
+        brand:
+          type: string
+          description: Vehicle brand
+          example: "Toyota"
+
+    VehicleInput:
+      type: object
+      required:
+        - vehicle_number
+        - fuel_type
+        - user_id
+        - color
+        - model
+        - brand
+      properties:
+        vehicle_number:
+          type: string
+          description: Vehicle license plate number
+          example: "ABC123"
+        fuel_type:
+          type: string
+          description: Vehicle fuel type
+          example: "Gasoline"
+        user_id:
+          type: integer
+          description: Owner's user ID
+          example: 1
+        color:
+          type: string
+          description: Vehicle color
+          example: "Blue"
+        model:
+          type: string
+          description: Vehicle model
+          example: "Camry"
+        brand:
+          type: string
+          description: Vehicle brand
+          example: "Toyota"
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+          example: "Resource not found"
+
+    SuccessMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Success message
+          example: "Operation completed successfully"
+
+# Global security requirement - applies to all operations unless overridden
+security:
+  - CookieAuth: []
+
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get all users (Admin only)
+      description: |
+        Retrieve all users. This endpoint requires admin privileges.
+        
+        **Note**: Make sure you're logged in as an admin through the web application first.
+        If this doesn't work in Swagger UI but works via direct URL, it's because the
+        session cookie isn't being sent properly by Swagger UI.
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Users
+      summary: Register new user
+      description: Create a new user account (No authentication required)
+      security: []  # Override global security for this endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request - Email already exists or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /user/{user_id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID (Admin only)
+      description: Retrieve specific user details (Admin only)
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User ID
+          example: "@john123"
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Users
+      summary: Update user
+      description: Update user information (Login required)
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User ID
+          example: "@john123"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Users
+      summary: Delete user (Admin only)
+      description: Delete user account (Admin required)
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User ID
+          example: "@john123"
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /parking-lots:
+    get:
+      tags:
+        - Parking Lots
+      summary: Get all parking lots
+      description: Retrieve all parking lots (Public access)
+      security: []  # No authentication required
+      responses:
+        '200':
+          description: List of parking lots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParkingLot'
+
+    post:
+      tags:
+        - Parking Lots
+      summary: Create parking lot (Admin only)
+      description: Create a new parking lot (Admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParkingLotInput'
+      responses:
+        '201':
+          description: Parking lot created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingLot'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Bad request - Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /parking-lot/{lot_id}:
+    get:
+      tags:
+        - Parking Lots
+      summary: Get parking lot by ID
+      description: Retrieve specific parking lot details (Public access)
+      security: []  # No authentication required
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Parking lot ID
+          example: 1
+      responses:
+        '200':
+          description: Parking lot details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingLot'
+        '404':
+          description: Parking lot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Parking Lots
+      summary: Update parking lot (Admin only)
+      description: Update parking lot information (Admin only)
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Parking lot ID
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParkingLotInput'
+      responses:
+        '200':
+          description: Parking lot updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingLot'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Parking lot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Parking Lots
+      summary: Delete parking lot (Admin only)
+      description: Delete parking lot (Admin only)
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Parking lot ID
+          example: 1
+      responses:
+        '200':
+          description: Parking lot deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Parking lot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /parking-spots:
+    get:
+      tags:
+        - Parking Spots
+      summary: Get all parking spots
+      description: Retrieve all parking spots (Public access)
+      security: []  # No authentication required
+      responses:
+        '200':
+          description: List of parking spots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParkingSpot'
+
+  /parking-spot/{spot_id}:
+    get:
+      tags:
+        - Parking Spots
+      summary: Get parking spot by ID
+      description: Retrieve specific parking spot details (Public access)
+      security: []  # No authentication required
+      parameters:
+        - name: spot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Parking spot ID
+          example: 1
+      responses:
+        '200':
+          description: Parking spot details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpot'
+        '404':
+          description: Parking spot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Parking Spots
+      summary: Update parking spot (Admin only)
+      description: Update parking spot information (Admin only)
+      parameters:
+        - name: spot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Parking spot ID
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParkingSpotInput'
+      responses:
+        '200':
+          description: Parking spot updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpot'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Parking spot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Parking Spots
+      summary: Delete parking spot (Admin only)
+      description: Delete parking spot (Admin only)
+      parameters:
+        - name: spot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Parking spot ID
+          example: 1
+      responses:
+        '200':
+          description: Parking spot deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Parking spot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /vehicles:
+    get:
+      tags:
+        - Vehicles
+      summary: Get vehicles
+      description: |
+        Get all vehicles (Admin) or user's own vehicles (Regular users).
+        Requires login.
+      responses:
+        '200':
+          description: List of vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Vehicles
+      summary: Register vehicle
+      description: Register a new vehicle (Login required)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleInput'
+      responses:
+        '201':
+          description: Vehicle registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '400':
+          description: Bad request - Vehicle already exists or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Can only register own vehicle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /vehicle/{vehicle_number}:
+    get:
+      tags:
+        - Vehicles
+      summary: Get vehicle by number
+      description: Retrieve specific vehicle details (Login required)
+      parameters:
+        - name: vehicle_number
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Vehicle license plate number
+          example: "ABC123"
+      responses:
+        '200':
+          description: Vehicle details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Not authorized to view this vehicle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Vehicle not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Vehicles
+      summary: Update vehicle
+      description: Update vehicle information (Login required)
+      parameters:
+        - name: vehicle_number
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Vehicle license plate number
+          example: "ABC123"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleInput'
+      responses:
+        '200':
+          description: Vehicle updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Not authorized to update this vehicle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Vehicle not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Vehicles
+      summary: Delete vehicle
+      description: Delete vehicle registration (Login required)
+      parameters:
+        - name: vehicle_number
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Vehicle license plate number
+          example: "ABC123"
+      responses:
+        '200':
+          description: Vehicle deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '401':
+          description: Unauthorized - Login required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Not authorized to delete this vehicle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Vehicle not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
