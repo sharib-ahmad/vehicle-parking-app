@@ -8,31 +8,34 @@ import io
 import os
 import random
 from datetime import datetime
-import pandas as pd
 
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import pandas as pd
 import requests
 from flask import (Blueprint, Response, current_app, flash, redirect,
-                   render_template, request, session, url_for)
+                    render_template, request, session, url_for)
 from flask_login import current_user, login_required, logout_user
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 
-from models import (IST, ParkingLot, ParkingSpot, Payment, PaymentForm,
-                    ProfileForm, ReleasedForm, ReservationStatus,
-                    ReservedParkingSpot, ReservedSpotForm, SpotStatus, User,
-                    UserProfile, PaymentStatus,UserSearchForm, Vehicle, db)
+from models.forms import (UserSearchForm, ReservedSpotForm, ReleasedForm,
+                        PaymentForm, ProfileForm)
 
-matplotlib.use('Agg')
+from models.model import (IST, ParkingLot, ReservationStatus, PaymentStatus,Payment,UserProfile,
+                        ParkingSpot, ReservedParkingSpot, SpotStatus, User,
+                        Vehicle, db)
 
-user_bp = Blueprint('user', __name__)
+matplotlib.use("Agg")
+
+user_bp = Blueprint("user", __name__)
 
 # Dashboard and Search Functionality
 # Handles user dashboard rendering and parking lot searches.
 
-@user_bp.route('/dashboard', methods=['GET', 'POST'])
+
+@user_bp.route("/dashboard", methods=["GET", "POST"])
 @login_required
 def dashboard():
     """
@@ -45,7 +48,6 @@ def dashboard():
     """
     form = UserSearchForm()
     lots = []
-    now = datetime.now(IST).time()
     search_location = session.get("search_location", "")
 
     if form.validate_on_submit():
@@ -59,31 +61,38 @@ def dashboard():
             or_(
                 ParkingLot.name.ilike(f"%{search_location}%"),
                 ParkingLot.pin_code.ilike(f"%{search_location}%"),
-                ParkingLot.prime_location_name.ilike(f"%{search_location}%")
+                ParkingLot.prime_location_name.ilike(f"%{search_location}%"),
             )
         ).all()
     else:
+        now = datetime.now(IST).time()  # get current time
+
         # Fetch lots that are active and currently open
         lots = ParkingLot.query.filter(
             ParkingLot.is_active == True,
             ParkingLot.open_time <= now,
-            ParkingLot.close_time >= now
+            ParkingLot.close_time >= now,
         ).all()
 
     # Get user reservations
-    reservations = ReservedParkingSpot.query.filter_by(user_id=current_user.id).order_by(
-        ReservedParkingSpot.reservation_timestamp.desc()).all()
+    reservations = (
+        ReservedParkingSpot.query.filter_by(user_id=current_user.id)
+        .order_by(ReservedParkingSpot.reservation_timestamp.desc())
+        .all()
+    )
 
     form.location.data = search_location
-    
-    return render_template('user/dashboard.html', 
-                         form=form, 
-                         parking_lots=lots, 
-                         search_location=search_location, 
-                         reservations=reservations,
-                         current_time=now)
 
-@user_bp.route('/clear-search')
+    return render_template(
+        "user/dashboard.html",
+        form=form,
+        parking_lots=lots,
+        search_location=search_location,
+        reservations=reservations,
+    )
+
+
+@user_bp.route("/clear-search")
 @login_required
 def clear_search():
     """
@@ -91,19 +100,21 @@ def clear_search():
     - Removes search location from session
     - Redirects back to dashboard with all lots visible
     """
-    session.pop('search_location', None)
-    flash('Search cleared.', 'info')
-    current_app.logger.info(f'User {current_user.id} cleared dashboard search')
-    
-    return redirect(url_for('user.dashboard'))
+    session.pop("search_location", None)
+    flash("Search cleared.", "info")
+    current_app.logger.info(f"User {current_user.id} cleared dashboard search")
+
+    return redirect(url_for("user.dashboard"))
+
 
 # Reservation Management
 # Manages the reservation process for parking spots.
 
-@user_bp.route('/reserve-spot/<int:lot_id>', methods=['GET', 'POST'])
+
+@user_bp.route("/reserve-spot/<int:lot_id>", methods=["GET", "POST"])
 @login_required
 def reserve_spot(lot_id):
-    """ 
+    """
     Handles the process of reserving a parking spot.
     Features:
     - Automatically finds available spots
@@ -115,20 +126,26 @@ def reserve_spot(lot_id):
     form = ReservedSpotForm()
 
     # Find an available spot
-    available_spots = [spot.id for spot in lot.parking_spots if spot.status == SpotStatus.AVAILABLE]
+    available_spots = [
+        spot.id for spot in lot.parking_spots if spot.status == SpotStatus.AVAILABLE
+    ]
     if not available_spots:
-        flash('No available spots in this lot.', 'danger')
-        current_app.logger.warning(f'User {current_user.id} tried to reserve in full lot {lot_id}')
-        return redirect(url_for('user.dashboard'))
+        flash("No available spots in this lot.", "danger")
+        current_app.logger.warning(
+            f"User {current_user.id} tried to reserve in full lot {lot_id}"
+        )
+        return redirect(url_for("user.dashboard"))
 
     preselected_spot_id = random.choice(available_spots)
 
     # Populate form choices from external APIs
     try:
-        brand_response = requests.get("https://private-anon-9f7e7a6b9b-carsapi1.apiary-mock.com/cars")
+        brand_response = requests.get(
+            "https://private-anon-9f7e7a6b9b-carsapi1.apiary-mock.com/cars"
+        )
         cars = brand_response.json()
-        brands = sorted({c['make'].capitalize() for c in cars}) 
-        models = sorted({c['model'].capitalize() for c in cars})
+        brands = sorted({c["make"].capitalize() for c in cars})
+        models = sorted({c["model"].capitalize() for c in cars})
 
         form.brand.choices = [(b, b) for b in brands]
         form.model.choices = [(m, m) for m in models]
@@ -141,23 +158,33 @@ def reserve_spot(lot_id):
         current_app.logger.error(f"Failed to fetch data from external APIs: {e}")
         flash("Could not load vehicle data. Please try again later.", "danger")
 
-    if request.method == 'GET':
+    if request.method == "GET":
         now = datetime.now(IST).time()
         if not (lot.open_time <= now <= lot.close_time):
-            flash(f'The parking lot is currently closed. Please try again between {lot.open_time} and {lot.close_time}.', 'danger')
-            current_app.logger.warning(f'User {current_user.id} tried to reserve outside of lot hours {lot_id}')
-            return redirect(url_for('user.dashboard'))
-        
+            flash(
+                f"The parking lot is currently closed. Please try again between {lot.open_time} and {lot.close_time}.",
+                "danger",
+            )
+            current_app.logger.warning(
+                f"User {current_user.id} tried to reserve outside of lot hours {lot_id}"
+            )
+            return redirect(url_for("user.dashboard"))
+
         form.lot_id.data = lot_id
         form.user_id.data = current_user.id
         form.spot_id.data = preselected_spot_id
 
     if form.validate_on_submit():
         # Check for existing active reservations for the same vehicle
-        if ReservedParkingSpot.query.filter_by(vehicle_number=form.vehicle_number.data, leaving_timestamp=None).first():
-            flash(f'You already have an active reservation for vehicle {form.vehicle_number.data}.', 'danger')
-            return redirect(url_for('user.dashboard'))
-        
+        if ReservedParkingSpot.query.filter_by(
+            vehicle_number=form.vehicle_number.data, leaving_timestamp=None
+        ).first():
+            flash(
+                f"You already have an active reservation for vehicle {form.vehicle_number.data}.",
+                "danger",
+            )
+            return redirect(url_for("user.dashboard"))
+
         # Insert new vehicle if it doesn't exist
         if not Vehicle.query.filter_by(vehicle_number=form.vehicle_number.data).first():
             new_vehicle = Vehicle(
@@ -166,11 +193,10 @@ def reserve_spot(lot_id):
                 fuel_type=form.fuel_type.data,
                 brand=form.brand.data,
                 model=form.model.data,
-                color=form.color.data
+                color=form.color.data,
             )
             db.session.add(new_vehicle)
-            db.session.flush() 
-
+            db.session.flush()
 
         reservation = ReservedParkingSpot(
             spot_id=form.spot_id.data,
@@ -188,28 +214,36 @@ def reserve_spot(lot_id):
 
         try:
             db.session.commit()
-            flash(f'Parking spot #{reservation.parking_spot.spot_number} reserved successfully.', 'success')
+            flash(
+                f"Parking spot #{reservation.parking_spot.spot_number} reserved successfully.",
+                "success",
+            )
         except SQLAlchemyError as e:
             db.session.rollback()
             current_app.logger.error(f"Reservation failed: {str(e)}")
-            flash("Something went wrong while reserving the spot. Please try again.", "danger")
+            flash(
+                "Something went wrong while reserving the spot. Please try again.",
+                "danger",
+            )
 
-        return redirect(url_for('user.dashboard'))
+        return redirect(url_for("user.dashboard"))
 
     if form.errors:
         for field, errors in form.errors.items():
             for error in errors:
-                flash(f'Error in {field}: {error}', 'danger')
+                flash(f"Error in {field}: {error}", "danger")
 
-    return render_template('user/reserve_spot.html', form=form, lot=lot)
+    return render_template("user/reserve_spot.html", form=form, lot=lot)
+
 
 # Payment and Vehicle Release
 # Manages the release of vehicles and payment processing.
 
-@user_bp.route('/reservation/<int:reservation_id>/released', methods=['GET', 'POST'])
+
+@user_bp.route("/reservation/<int:reservation_id>/released", methods=["GET", "POST"])
 @login_required
 def released(reservation_id):
-    """ 
+    """
     Handles the release of a vehicle and calculates cost.
     Features:
     - Calculates parking duration and total cost
@@ -221,8 +255,11 @@ def released(reservation_id):
     form = ReleasedForm(obj=reservation)
 
     leaving_timestamp = datetime.now(IST)
-    aware_parking_timestamp = reservation.parking_timestamp.replace(
-        tzinfo=IST) if reservation.parking_timestamp.tzinfo is None else reservation.parking_timestamp
+    aware_parking_timestamp = (
+        reservation.parking_timestamp.replace(tzinfo=IST)
+        if reservation.parking_timestamp.tzinfo is None
+        else reservation.parking_timestamp
+    )
 
     duration_seconds = (leaving_timestamp - aware_parking_timestamp).total_seconds()
     duration_hours = round(duration_seconds / 3600, 2)
@@ -234,19 +271,20 @@ def released(reservation_id):
 
     if form.validate_on_submit():
         # Store temporary data in session before payment
-        session['temp_leaving_timestamp'] = leaving_timestamp.isoformat()
-        session['temp_duration'] = duration_hours
-        session['temp_total_cost'] = total_cost
+        session["temp_leaving_timestamp"] = leaving_timestamp.isoformat()
+        session["temp_duration"] = duration_hours
+        session["temp_total_cost"] = total_cost
 
-        flash('Please complete the payment for the vehicle to be released.', 'info')
-        return redirect(url_for('user.make_payment', reservation_id=reservation.id))
+        flash("Please complete the payment for the vehicle to be released.", "info")
+        return redirect(url_for("user.make_payment", reservation_id=reservation.id))
 
-    return render_template('user/released.html', form=form, reservation=reservation)
+    return render_template("user/released.html", form=form, reservation=reservation)
 
-@user_bp.route('/reservation/<int:reservation_id>/payment', methods=['GET', 'POST'])
+
+@user_bp.route("/reservation/<int:reservation_id>/payment", methods=["GET", "POST"])
 @login_required
 def make_payment(reservation_id):
-    """ 
+    """
     Handles the payment process for a reservation.
     Features:
     - Processes payment and updates reservation status
@@ -258,12 +296,12 @@ def make_payment(reservation_id):
     reservation = ReservedParkingSpot.query.get_or_404(reservation_id)
 
     try:
-        leaving_timestamp = datetime.fromisoformat(session['temp_leaving_timestamp'])
-        duration = session['temp_duration']
-        total_cost = session['temp_total_cost']
+        leaving_timestamp = datetime.fromisoformat(session["temp_leaving_timestamp"])
+        duration = session["temp_duration"]
+        total_cost = session["temp_total_cost"]
     except KeyError:
         flash("Session expired. Please release the vehicle again.", "danger")
-        return redirect(url_for('user.dashboard'))
+        return redirect(url_for("user.dashboard"))
 
     form = PaymentForm()
     form.amount.data = total_cost
@@ -279,7 +317,7 @@ def make_payment(reservation_id):
             reservation_id=reservation.id,
             amount=form.amount.data,
             payment_method=form.payment_method.data,
-            payment_status='PAID',
+            payment_status="PAID",
         )
 
         lot = ParkingLot.query.get(reservation.parking_spot.lot_id)
@@ -289,37 +327,42 @@ def make_payment(reservation_id):
         db.session.commit()
 
         # Clear temporary session data
-        session.pop('temp_leaving_timestamp', None)
-        session.pop('temp_duration', None)
-        session.pop('temp_total_cost', None)
+        session.pop("temp_leaving_timestamp", None)
+        session.pop("temp_duration", None)
+        session.pop("temp_total_cost", None)
 
         flash("Payment successful!", "success")
-        return redirect(url_for('user.dashboard'))
+        return redirect(url_for("user.dashboard"))
 
-    return render_template('user/payment.html', form=form, reservation=reservation, total_cost=total_cost)
+    return render_template(
+        "user/payment.html", form=form, reservation=reservation, total_cost=total_cost
+    )
 
-@user_bp.route('/payment/cancel')
+
+@user_bp.route("/payment/cancel")
 @login_required
 def cancel_payment():
-    """ 
+    """
     Cancels the payment process.
     - Clears all temporary session data
     - Redirects user back to dashboard
     - No changes are saved to database
     """
-    session.pop('temp_leaving_timestamp', None)
-    session.pop('temp_duration', None)
-    session.pop('temp_total_cost', None)
+    session.pop("temp_leaving_timestamp", None)
+    session.pop("temp_duration", None)
+    session.pop("temp_total_cost", None)
     flash("Payment cancelled. No changes were saved.", "info")
-    return redirect(url_for('user.dashboard'))
+    return redirect(url_for("user.dashboard"))
+
 
 # User Profile Management
 # Manages user profile updates and deletion requests.
 
-@user_bp.route('/profile', methods=['GET', 'POST'])
+
+@user_bp.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    """ 
+    """
     Manages user profile updates and deletion requests.
     Features:
     - Updates user profile information
@@ -339,33 +382,36 @@ def profile():
 
         if form.profile_pic.data:
             filename = f"{current_user.id}.jpg"
-            filepath = os.path.join(current_app.static_folder, 'user_images', filename)
+            filepath = os.path.join(current_app.static_folder, "user_images", filename)
             os.makedirs(os.path.dirname(filepath), exist_ok=True)
             form.profile_pic.data.save(filepath)
-            current_user.profile.profile_pic = os.path.join('user_images', filename)
+            current_user.profile.profile_pic = os.path.join("user_images", filename)
 
         if form.save_changes.data:
             db.session.commit()
-            flash('Profile updated successfully.', 'success')
+            flash("Profile updated successfully.", "success")
+            current_app.logger.info(f"User {current_user.id} updated profile")
         elif form.delete_profile.data:
             current_user.schedule_deletion()
             user_id = current_user.id
             db.session.commit()
             logout_user()
-            flash('Your profile is scheduled to be deleted in 15 days.', 'warning')
-            current_app.logger.info(f'User {user_id} scheduled profile deletion')
-            return redirect(url_for('auth.login'))
+            flash("Your profile is scheduled to be deleted in 15 days.", "warning")
+            current_app.logger.info(f"User {user_id} scheduled profile deletion")
+            return redirect(url_for("auth.login"))
 
-        return redirect(url_for('user.profile'))
+        return redirect(url_for("user.profile"))
 
     form.full_name.data = current_user.full_name
-    return render_template('user/profile.html', form=form, user=current_user)
+    return render_template("user/profile.html", form=form, user=current_user)
+
 
 # Background Tasks
 # Handles background tasks such as deleting scheduled users.
 
+
 def delete_scheduled_users():
-    """ 
+    """
     Deletes users who have been scheduled for deletion.
     Features:
     - Finds users scheduled for deletion after expiry date
@@ -376,7 +422,7 @@ def delete_scheduled_users():
     users_to_delete = User.query.filter(
         User.is_active == False,
         User.scheduled_delete_at != None,
-        User.scheduled_delete_at <= now
+        User.scheduled_delete_at <= now,
     ).all()
 
     for user in users_to_delete:
@@ -384,20 +430,24 @@ def delete_scheduled_users():
 
     db.session.commit()
 
+
 # Analytics and Visualizations
 # Generates user-specific analytics and visualizations.
 
-@user_bp.route('/summary')
+
+@user_bp.route("/summary")
 @login_required
 def summary():
-    """ 
+    """
     Renders the user summary page with reservation and payment info.
     - Shows parking history
     - Displays amount spent per reservation
     """
-    reservations = ReservedParkingSpot.query.filter_by(user_id=current_user.id).order_by(
-        ReservedParkingSpot.reservation_timestamp.desc()
-    ).all()
+    reservations = (
+        ReservedParkingSpot.query.filter_by(user_id=current_user.id)
+        .order_by(ReservedParkingSpot.reservation_timestamp.desc())
+        .all()
+    )
 
     total_spent = sum(
         r.payment.amount
@@ -406,15 +456,16 @@ def summary():
     )
 
     return render_template(
-        'user/summary.html',
+        "user/summary.html",
         reservations=reservations,
-        total_spent=total_spent or 0.0
+        total_spent=round(total_spent, 2) or 0.0,
     )
 
-@user_bp.route('/chart/parking-spot-summary')
+
+@user_bp.route("/chart/parking-spot-summary")
 @login_required
 def parking_spot_summary_chart():
-    """ 
+    """
     Generates a bar chart of amounts invested per parking spot.
     Handles missing/deleted spots gracefully.
     """
@@ -431,21 +482,29 @@ def parking_spot_summary_chart():
             amounts.append(r.payment.amount)
 
     if not spot_labels:
-        spot_labels, amounts = ['No Data'], [0]
+        spot_labels, amounts = ["No Data"], [0]
 
     # Create chart
     fig, ax = plt.subplots(figsize=(8, 5))
-    bars = ax.bar(spot_labels, amounts, color=['#4CAF50', '#2196F3', '#f44336', '#FFC107'])
+    bars = ax.bar(
+        spot_labels, amounts, color=["#4CAF50", "#2196F3", "#f44336", "#FFC107"]
+    )
 
     ax.set_title("Amount Invested by You per Parking Spot")
     ax.set_xlabel("Spot")
     ax.set_ylabel("Amount (₹)")
-    ax.yaxis.grid(True, linestyle='--', alpha=0.6)
+    ax.yaxis.grid(True, linestyle="--", alpha=0.6)
 
     for i, bar in enumerate(bars):
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2, height + 1,
-                f"₹{amounts[i]:.2f}", ha='center', va='bottom', fontsize=10)
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            height + 1,
+            f"₹{amounts[i]:.2f}",
+            ha="center",
+            va="bottom",
+            fontsize=10,
+        )
 
     ax.set_ylim(0, max(amounts) + 100 if amounts else 100)
     fig.tight_layout()
@@ -456,9 +515,10 @@ def parking_spot_summary_chart():
     img_io.seek(0)
     plt.close(fig)
 
-    return Response(img_io.getvalue(), mimetype='image/png')
+    return Response(img_io.getvalue(), mimetype="image/png")
 
-@user_bp.route('/download/parking-spot-summary')
+
+@user_bp.route("/download/parking-spot-summary")
 @login_required
 def download_parking_spot_summary():
     """
@@ -470,44 +530,64 @@ def download_parking_spot_summary():
 
     for r in reservations:
         if r.payment and r.payment.payment_status == PaymentStatus.PAID:
-            spot = f"Spot({r.parking_spot.spot_number})" if r.parking_spot else "Deleted Spot"
+            spot = (
+                f"Spot({r.parking_spot.spot_number})"
+                if r.parking_spot
+                else "Deleted Spot"
+            )
             vehicle = r.vehicle_number or "N/A"
 
-            start_time = r.parking_timestamp.strftime('%Y-%m-%d %H:%M') if r.parking_timestamp else 'N/A'
-            end_time = r.leaving_timestamp.strftime('%Y-%m-%d %H:%M') if r.leaving_timestamp else 'N/A'
+            start_time = (
+                r.parking_timestamp.strftime("%Y-%m-%d %H:%M")
+                if r.parking_timestamp
+                else "N/A"
+            )
+            end_time = (
+                r.leaving_timestamp.strftime("%Y-%m-%d %H:%M")
+                if r.leaving_timestamp
+                else "N/A"
+            )
 
             # Calculate duration
             if r.parking_timestamp and r.leaving_timestamp:
                 duration = r.leaving_timestamp - r.parking_timestamp
                 duration_str = str(duration)
             else:
-                duration_str = 'N/A'
+                duration_str = "N/A"
 
             amount = r.payment.amount
             total_spent += amount
 
-            payment_time = r.payment.payment_timestamp.strftime('%Y-%m-%d %H:%M') if r.payment.payment_timestamp else 'N/A'
+            payment_time = (
+                r.payment.payment_timestamp.strftime("%Y-%m-%d %H:%M")
+                if r.payment.payment_timestamp
+                else "N/A"
+            )
 
-            data.append({
-                "Parking Spot": spot,
-                "Vehicle Number": vehicle,
-                "Parking Time": start_time,
-                "Leaving Time": end_time,
-                "Duration": duration_str,
-                "Amount Paid (₹)": amount,
-                "Payment Time": payment_time
-            })
+            data.append(
+                {
+                    "Parking Spot": spot,
+                    "Vehicle Number": vehicle,
+                    "Parking Time": start_time,
+                    "Leaving Time": end_time,
+                    "Duration": duration_str,
+                    "Amount Paid (₹)": amount,
+                    "Payment Time": payment_time,
+                }
+            )
 
     if not data:
-        data = [{
-            "Parking Spot": "No Data",
-            "Vehicle Number": "N/A",
-            "Paking Time": "N/A",
-            "Leaving Time": "N/A",
-            "Duration": "N/A",
-            "Amount Paid (₹)": 0,
-            "Payment Time": "N/A"
-        }]
+        data = [
+            {
+                "Parking Spot": "No Data",
+                "Vehicle Number": "N/A",
+                "Paking Time": "N/A",
+                "Leaving Time": "N/A",
+                "Duration": "N/A",
+                "Amount Paid (₹)": 0,
+                "Payment Time": "N/A",
+            }
+        ]
 
     df = pd.DataFrame(data)
 
@@ -515,14 +595,17 @@ def download_parking_spot_summary():
     df.loc[len(df.index)] = ["", "", "", "", "Total", total_spent, ""]
 
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='openpyxl') as writer:
-        df.to_excel(writer, index=False, sheet_name='Parking Summary')
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Parking Summary")
 
     output.seek(0)
     return Response(
         output.getvalue(),
-        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        headers={"Content-Disposition": "attachment;filename=parking_summary_detailed.xlsx"}
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": "attachment;filename=parking_summary_detailed.xlsx"
+        },
     )
+
 
 # End of User Controller
