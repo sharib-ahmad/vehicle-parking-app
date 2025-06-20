@@ -1,4 +1,7 @@
 {% extends 'layout.html' %}
+{% block meta_tags %}
+<meta http-equiv="refresh" content="60">
+{% endblock %}
 
 {% block title %}Parking Summary{% endblock %}
 
@@ -13,7 +16,7 @@
                     <!-- Chart Section -->
                     <div class="text-center mb-4">
                         <img src="{{ url_for('user.parking_spot_summary_chart') }}" class="img-fluid rounded shadow-sm"
-                             alt="Parking Spot Investment Chart">
+                            alt="Parking Spot Investment Chart">
                         <p class="mt-3 fw-medium text-muted">Summary of your used parking spots</p>
                     </div>
 
@@ -40,32 +43,33 @@
                                 <tr>
                                     <td>
                                         {% if r.parking_spot %}
-                                            {{ r.parking_spot.spot_number }}
+                                        {{ r.parking_spot.spot_number }}
                                         {% else %}
-                                            <span class="text-muted">Deleted Spot</span>
+                                        <span class="text-muted">Deleted Spot</span>
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if r.parking_spot and r.parking_spot.parking_lot %}
-                                            {{ r.parking_spot.parking_lot.name }}
+                                        {{ r.parking_spot.parking_lot.name }}
                                         {% else %}
-                                            <span class="text-muted">Deleted Lot</span>
+                                        <span class="text-muted">Deleted Lot</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ r.parking_timestamp.strftime('%Y-%m-%d %H:%M') if r.parking_timestamp else '-' }}</td>
+                                    <td>{{ r.parking_timestamp.strftime('%Y-%m-%d %H:%M') if r.parking_timestamp else
+                                        '-' }}</td>
                                     <td>
                                         {% if r.leaving_timestamp %}
-                                            {{ r.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}
+                                        {{ r.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}
                                         {% else %}
-                                            <span class="text-muted">Still Parked</span>
+                                        <span class="text-muted">Still Parked</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ r.status.value|capitalize }}</td>
                                     <td>
                                         {% if r.payment and r.payment.payment_status.name == 'PAID' %}
-                                            ₹{{ r.payment.amount }}
+                                        ₹{{ r.payment.amount }}
                                         {% else %}
-                                            <span class="text-muted">Unpaid</span>
+                                        <span class="text-muted">Unpaid</span>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -76,7 +80,8 @@
 
                     <!-- Download Button -->
                     <div class="text-center mt-4">
-                        <a href="{{ url_for('user.download_parking_spot_summary') }}" class="btn btn-success btn-lg shadow-sm">
+                        <a href="{{ url_for('user.download_parking_spot_summary') }}"
+                            class="btn btn-success btn-lg shadow-sm">
                             ⬇️ Download Excel Summary
                         </a>
                     </div>

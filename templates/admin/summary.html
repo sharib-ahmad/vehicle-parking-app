@@ -1,4 +1,7 @@
 {% extends 'layout.html' %}
+{% block meta_tags %}
+<meta http-equiv="refresh" content="60">
+{% endblock %}
 
 {% block title %}Admin Summary{% endblock %}
 
@@ -16,10 +19,8 @@
             <div class="card shadow-sm w-100">
                 <div class="card-body text-center">
                     <h4 class="card-title">💰 Revenue from Each Parking Lot</h4>
-                    <img src="{{ url_for('admin.revenue_chart') }}"
-                         alt="Revenue Chart"
-                         class="img-fluid rounded my-3"
-                         style="max-height: 350px; object-fit: contain;">
+                    <img src="{{ url_for('admin.revenue_chart') }}" alt="Revenue Chart" class="img-fluid rounded my-3"
+                        style="max-height: 350px; object-fit: contain;">
                 </div>
             </div>
         </div>
@@ -29,18 +30,15 @@
             <div class="card shadow-sm w-100">
                 <div class="card-body text-center">
                     <h4 class="card-title">🅿️ Parking Lot Usage Summary</h4>
-                    <img src="{{ url_for('admin.parking_summary_chart') }}"
-                         alt="Parking Summary Chart"
-                         class="img-fluid rounded my-3"
-                         style="max-height: 350px; object-fit: contain;">
+                    <img src="{{ url_for('admin.parking_summary_chart') }}" alt="Parking Summary Chart"
+                        class="img-fluid rounded my-3" style="max-height: 350px; object-fit: contain;">
                 </div>
             </div>
         </div>
 
         <!-- Download Excel Button -->
         <div class="col-12 text-center mt-4">
-            <a href="{{ url_for('admin.download_parking_lot_summary') }}"
-               class="btn btn-success btn-lg shadow">
+            <a href="{{ url_for('admin.download_parking_lot_summary') }}" class="btn btn-success btn-lg shadow">
                 ⬇️ Download Parking Lot Summary (Excel)
             </a>
         </div>
