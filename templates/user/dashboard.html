@@ -35,17 +35,26 @@ Vehicle-P | Home
                     {% if res.status.value == 'active' %}
                     <td>{{ res.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
                     <td>
-                        <a class="btn btn-sm btn-danger" href="{{ url_for('user.released', reservation_id=res.id) }}"
-                            role="button">Release</a>
+                        {% set open_time = res.parking_spot.parking_lot.open_time if res.parking_spot and
+                        res.parking_spot.parking_lot else None %}
+                        {% set close_time = res.parking_spot.parking_lot.close_time if res.parking_spot and
+                        res.parking_spot.parking_lot else None %}
+
+                        {% if open_time and close_time and (current_time < open_time or current_time> close_time) %}
+                            <span data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Lot is closed now. You can release it when it's open.">
+                                <button class="btn btn-sm btn-danger" disabled>Release</button>
+                            </span>
+                            {% else %}
+                            <a class="btn btn-sm btn-danger"
+                                href="{{ url_for('user.released', reservation_id=res.id) }}" role="button">Release</a>
+                            {% endif %}
                     </td>
                     {% else %}
                     <td>{{ res.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td>
-
-                        <span class="custom-text ">Parked Out</span>
-
-                    </td>
+                    <td><span class="custom-text">Parked Out</span></td>
                     {% endif %}
+
                 </tr>
                 {% endfor %}
 
@@ -59,17 +68,26 @@ Vehicle-P | Home
                     {% if res.status.value == 'active' %}
                     <td>{{ res.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
                     <td>
-                        <a class="btn btn-sm btn-danger" href="{{ url_for('user.released', reservation_id=res.id) }}"
-                            role="button">Release</a>
+                        {% set open_time = res.parking_spot.parking_lot.open_time if res.parking_spot and
+                        res.parking_spot.parking_lot else None %}
+                        {% set close_time = res.parking_spot.parking_lot.close_time if res.parking_spot and
+                        res.parking_spot.parking_lot else None %}
+
+                        {% if open_time and close_time and (current_time < open_time or current_time> close_time) %}
+                            <span data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Lot is closed now. You can release it when it's open.">
+                                <button class="btn btn-sm btn-danger" disabled>Release</button>
+                            </span>
+                            {% else %}
+                            <a class="btn btn-sm btn-danger"
+                                href="{{ url_for('user.released', reservation_id=res.id) }}" role="button">Release</a>
+                            {% endif %}
                     </td>
                     {% else %}
                     <td>{{ res.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td>
-
-                        <span class="btn btn-sm btn-success">Parked Out</span>
-
-                    </td>
+                    <td><span class="custom-text">Parked Out</span></td>
                     {% endif %}
+
                 </tr>
                 {% endfor %}
             </tbody>
@@ -125,7 +143,8 @@ Vehicle-P | Home
                                 {{ lot.price_per_hour }}</p>
                             <p><i class="fa-solid fa-layer-group me-2 text-info"></i><strong>Floor Level:</strong> {{
                                 lot.floor_level }}</p>
-                            <p><strong>Timing: </strong>{{ lot.open_time.strftime("%I:%M %p") }} - {{ lot.close_time.strftime("%I:%M %p") }}</p>
+                            <p><strong>Timing: </strong>{{ lot.open_time.strftime("%I:%M %p") }} - {{
+                                lot.close_time.strftime("%I:%M %p") }}</p>
                             <p class="text-center text-primary">Click on card to register</p>
                         </div>
                     </div>
@@ -146,6 +165,10 @@ Vehicle-P | Home
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
         const btn = document.getElementById('viewMoreBtn');
         if (!btn) return; // no button, no script needed
 

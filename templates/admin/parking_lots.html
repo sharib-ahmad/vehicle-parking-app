@@ -66,6 +66,7 @@ Parking Lots - Vehicle Parking App
                             <i class="fa-solid fa-layer-group me-2 text-info"></i><strong>Floor Level:</strong> {{
                             lot.floor_level }}
                         </p>
+                        <p>{{ lot.open_time.strftime("%I:%M %p") }} - {{ lot.close_time.strftime("%I:%M %p") }}</p>
                     </div>
                 </div>
             </div>

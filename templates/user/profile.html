@@ -42,10 +42,12 @@ User Profile
                 {{ form.save_changes(class="btn btn-success px-4 mb-2") }}
 
                 <!-- Trigger modal -->
+                {% if current_user.role == 'UserRole.USER' %}
                 <button type="button" class="btn btn-danger px-4 mb-2" data-bs-toggle="modal"
                     data-bs-target="#deleteModal">
                     Delete Profile
                 </button>
+                {% endif %}
             </div>
         </div>
 
@@ -55,7 +57,8 @@ User Profile
 </div>
 
 <!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark text-white border-0">
             <div class="modal-header border-0">
@@ -69,7 +72,8 @@ User Profile
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <!-- Trigger hidden delete button from main form -->
-                <button type="button" class="btn btn-danger" onclick="document.getElementById('hiddenDeleteBtn').click();">
+                <button type="button" class="btn btn-danger"
+                    onclick="document.getElementById('hiddenDeleteBtn').click();">
                     Confirm Delete
                 </button>
             </div>
