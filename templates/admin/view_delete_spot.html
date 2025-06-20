@@ -2,7 +2,7 @@
 {% block title %}View/Delete Parking Spot{% endblock %}
 
 {% block main_content %}
-<div class="modal fade" id="viewDeleteModal" tabindex="-1" aria-labelledby="viewDeleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewDeleteModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="viewDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <form method="POST" action="{{ url_for('admin.view_delete_spot', spot_id=spot.id) }}">
             {{ form.hidden_tag() }}

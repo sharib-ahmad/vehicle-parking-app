@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main_content %}
-<div class="modal fade" id="addLotModal" tabindex="-1" aria-labelledby="addLotModalLabel" aria-hidden="true">
+<div class="modal fade" id="addLotModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="addLotModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <form method="POST" action="{{ url_for('admin.add_parking_lot') }}">
             {{ form.hidden_tag() }}

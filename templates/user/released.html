@@ -5,7 +5,7 @@ Vehicle-P | Released
 <!-- ReleasedForm Modal -->
 
 {% block main_content %}
-<div class="modal fade" id="releaseModal" tabindex="-1" aria-labelledby="releaseModalLabel" aria-hidden="true">
+<div class="modal fade" id="releaseModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="releaseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg"><!-- wider modal -->
         <div class="modal-content">
             <form method="POST" action="{{ url_for('user.released', reservation_id=reservation.id) }}">
