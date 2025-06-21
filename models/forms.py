@@ -78,14 +78,15 @@ class LoginForm(FlaskForm):
 class ParkingLotForm(FlaskForm):
     """Form for creating a new parking lot with required fields."""
 
-    name = StringField("Name", validators=[DataRequired()])
+    city = StringField(label="City", validators=[DataRequired()],render_kw={"readonly": True})
+    state = StringField(label="State", validators=[DataRequired()],render_kw={"readonly": True})
+    district = StringField(label="District", validators=[DataRequired()],render_kw={"readonly": True})
     prime_location_name = StringField(
         label="Prime Location Name", validators=[DataRequired()]
     )
     price_per_hour = FloatField(
         label="Price per Hour", validators=[DataRequired(), NumberRange(min=0)]
     )
-    address = TextAreaField(label="Address", validators=[DataRequired()])
     pin_code = StringField(label="Pin Code", validators=[DataRequired()])
     floor_level = SelectField(
         label="Floor Level",
@@ -107,19 +108,14 @@ class ParkingLotForm(FlaskForm):
 class EditParkingLotForm(FlaskForm):
     """Form for editing parking lot details with some read-only fields."""
 
-    name = StringField(
-        label="Name", validators=[DataRequired()], render_kw={"readonly": True}
-    )
+    city = StringField(label="City", validators=[DataRequired()],render_kw={"readonly": True})  
+    state = StringField(label="State", validators=[DataRequired()],render_kw={"readonly": True})    
+    district = StringField(label="District", validators=[DataRequired()],render_kw={"readonly": True})  
+
     prime_location_name = StringField(
         label="Prime Location",
         validators=[DataRequired()],
         render_kw={"readonly": True},
-    )
-    price_per_hour = FloatField(
-        label="Price per Hour", validators=[DataRequired(), NumberRange(min=0)]
-    )
-    address = StringField(
-        label="Address", validators=[DataRequired()], render_kw={"readonly": True}
     )
     pin_code = StringField(
         label="Pin Code", validators=[DataRequired()], render_kw={"readonly": True}
@@ -129,6 +125,9 @@ class EditParkingLotForm(FlaskForm):
         choices=[],
         validators=[DataRequired()],
         render_kw={"readonly": True},
+    )
+    price_per_hour = FloatField(
+        label="Price per Hour", validators=[DataRequired(), NumberRange(min=0)]
     )
     open_time = TimeField(label="Open Time", format="%H:%M")
     close_time = TimeField(label="Close Time", format="%H:%M")

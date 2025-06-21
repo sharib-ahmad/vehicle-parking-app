@@ -6,7 +6,7 @@ Vehicle-P | Search
 
 {% block main_content %}
 <div class="container-fluid py-4 px-3 px-md-5">
-    
+
     <div class="row justify-content-center mb-4 sticky-top  py-3 shadow-sm z-3 custom-sticky-top">
         <div class="col-12 col-md-10 col-lg-8">
             <form method="POST" action="{{ url_for('admin.search') }}" class="mb-4 d-flex">
@@ -36,8 +36,8 @@ Vehicle-P | Search
             <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="card h-100">
                     <div class="card-body d-flex flex-column">
-                        <h2 class="card-title d-flex justify-content-between text-black">#{{lot.id}} {{ lot.name }}<i
-                                class="fas fa-car"></i></h2>
+                        <h2 class="card-title d-flex justify-content-between text-black">#{{lot.id}} {{
+                            lot.prime_location_name }}<i class="fas fa-car"></i></h2>
                         <div class="mb-2">
                             <a href="{{ url_for('admin.edit_parking_lot', lot_id=lot.id) }}" class="btn btn-primary"
                                 role="button">Edit</a>
@@ -62,10 +62,21 @@ Vehicle-P | Search
                             {% endfor %}
                         </div>
                         <div class="mt-auto">
-                            <p class="text-black mb-1"><strong>Location:</strong> {{ lot.prime_location_name }}</p>
-                            <p class="text-black  mb-1"><strong>Address:</strong> {{ lot.address }}</p>
-                            <p class="text-black "><strong>Price/Hour:</strong><i
-                                    class="fa-solid fa-indian-rupee-sign mx-1"></i>{{ lot.price_per_hour }}</p>
+
+                            <p class="text-truncate" title="{{ lot.address }}">
+                                <i class="fa-solid fa-map me-2 text-secondary"></i>
+                                <strong>Address:</strong> {{ lot.address }}
+                            </p>
+                            <p>
+                                <i
+                                    class="fa-solid fa-indian-rupee-sign me-2 text-success"></i><strong>Price/Hour:</strong>
+                                {{ lot.price_per_hour }}
+                            </p>
+                            <p>
+                                <i class="fa-solid fa-layer-group me-2 text-info"></i><strong>Floor Level:</strong> {{
+                                lot.floor_level }}
+                            </p>
+                            <p>{{ lot.open_time.strftime("%I:%M %p") }} - {{ lot.close_time.strftime("%I:%M %p") }}</p>
                         </div>
                     </div>
                 </div>
@@ -112,7 +123,7 @@ Vehicle-P | Search
         </h2>
     </div>
 
-    
+
     <div class="card shadow rounded p-4">
         <table class="table table-borderless">
             <tbody>
@@ -124,7 +135,7 @@ Vehicle-P | Search
                     <th scope="row" class="text-end ">Phone Number:</th>
                     <td>{{ vehicle.user.phone_number if vehicle.user else 'N/A' }}</td>
                 </tr>
-                 <tr>
+                <tr>
                     <th scope="row" class="text-end ">Address:</th>
                     <td>{{ vehicle.user.address if vehicle.user else 'N/A' }}</td>
                 </tr>
@@ -152,9 +163,9 @@ Vehicle-P | Search
                     <th scope="row" class="text-end ">Parking Time:</th>
                     <td>
                         {% if vehicle.reservations %}
-                            {{ vehicle.reservations[0].parking_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                        {{ vehicle.reservations[0].parking_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
                         {% else %}
-                            N/A
+                        N/A
                         {% endif %}
                     </td>
                 </tr>
@@ -162,9 +173,9 @@ Vehicle-P | Search
                     <th scope="row" class="text-end ">Leaving Time:</th>
                     <td>
                         {% if vehicle.reservations %}
-                            {{ vehicle.reservations[0].leaving_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                        {{ vehicle.reservations[0].leaving_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
                         {% else %}
-                            N/A
+                        N/A
                         {% endif %}
                     </td>
                 </tr>

@@ -22,7 +22,7 @@ Parking Lots - Vehicle Parking App
             <div class="card h-100">
                 <div class="card-body d-flex flex-column">
                     <h2 class="card-title d-flex justify-content-between text-info">
-                        #{{lot.id}} {{ lot.name }}<i class="text-white fas fa-car"></i>
+                        #{{lot.id}} {{ lot.prime_location_name }}<i class="text-white fas fa-car"></i>
                     </h2>
                     <div class="mb-2">
                         <a href="{{ url_for('admin.edit_parking_lot', lot_id=lot.id) }}" class="btn btn-primary"
@@ -49,11 +49,7 @@ Parking Lots - Vehicle Parking App
                         {% endfor %}
                     </div>
                     <div class="mt-auto">
-                        <p>
-                            <i
-                                class="fa-solid fa-location-dot me-2 text-danger hover-glow"></i><strong>Location:</strong>
-                            {{ lot.prime_location_name }}
-                        </p>
+                
                         <p class="text-truncate" title="{{ lot.address }}">
                             <i class="fa-solid fa-map me-2 text-secondary"></i>
                             <strong>Address:</strong> {{ lot.address }}

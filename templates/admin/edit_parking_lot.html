@@ -3,8 +3,8 @@
 
 {% block main_content %}
 <!-- Modal -->
-<div class="modal fade" id="editParkingLotModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editParkingLotModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="editParkingLotModal" data-bs-backdrop="static" tabindex="-1"
+  aria-labelledby="editParkingLotModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content shadow-lg border-0 rounded-lg">
       <div class="modal-header">
@@ -14,26 +14,36 @@
       <div class="modal-body">
         <form method="POST" action="{{ url_for('admin.edit_parking_lot', lot_id=parking_lot.id) }}">
           {{ form.hidden_tag() }}
+
+          <!-- Row 1 -->
           <div class="row">
-            <div class="col-md-6 mb-3">
-              {{ form.name.label(class="form-label") }}
-              {{ form.name(class="form-control") }}
-            </div>
             <div class="col-md-6 mb-3">
               {{ form.prime_location_name.label(class="form-label") }}
               {{ form.prime_location_name(class="form-control") }}
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              {{ form.price_per_hour.label(class="form-label") }}
-              {{ form.price_per_hour(class="form-control") }}
-            </div>
             <div class="col-md-6 mb-3">
               {{ form.pin_code.label(class="form-label") }}
-              {{ form.pin_code(class="form-control") }}
+              {{ form.pin_code(class="form-control", id="pin_code") }}
             </div>
           </div>
+
+          <!-- Row 2 -->
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              {{ form.city.label(class="form-label") }}
+              {{ form.city(class="form-control", id="city") }}
+            </div>
+            <div class="col-md-4 mb-3">
+              {{ form.district.label(class="form-label") }}
+              {{ form.district(class="form-control", id="district") }}
+            </div>
+            <div class="col-md-4 mb-3">
+              {{ form.state.label(class="form-label") }}
+              {{ form.state(class="form-control", id="state") }}
+            </div>
+          </div>
+
+          <!-- Row 3 -->
           <div class="row">
             <div class="col-md-6 mb-3">
               {{ form.floor_level.label(class="form-label") }}
@@ -44,6 +54,20 @@
               {{ form.maximum_number_of_spots(class="form-control") }}
             </div>
           </div>
+
+          <!-- Row 4 (now: is_active and price_per_hour) -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{ form.is_active.label(class="form-label") }}
+              {{ form.is_active(class="form-control") }}
+            </div>
+            <div class="col-md-6 mb-3">
+              {{ form.price_per_hour.label(class="form-label") }}
+              {{ form.price_per_hour(class="form-control", step="0.01") }}
+            </div>
+          </div>
+
+          <!-- Row 5 (last: open_time and close_time) -->
           <div class="row">
             <div class="col-md-6 mb-3">
               {{ form.open_time.label(class="form-label") }}
@@ -52,16 +76,6 @@
             <div class="col-md-6 mb-3">
               {{ form.close_time.label(class="form-label") }}
               {{ form.close_time(class="form-control") }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              {{ form.is_active.label(class="form-label") }}
-              {{ form.is_active(class="form-control")}}
-            </div>
-            <div class="col-md-6 mb-3">
-              {{ form.address.label(class="form-label") }}
-              {{ form.address(class="form-control") }}
             </div>
           </div>
 
@@ -81,6 +95,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     var myModal = new bootstrap.Modal(document.getElementById('editParkingLotModal'));
     myModal.show();
+
   });
 </script>
 {% endblock %}

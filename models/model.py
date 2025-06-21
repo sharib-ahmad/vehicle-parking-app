@@ -119,11 +119,13 @@ class UserProfile(db.Model):
 class ParkingLot(db.Model):
     __tablename__ = "parking_lots"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
     prime_location_name = db.Column(db.String(100), nullable=False)
-    price_per_hour = db.Column(db.Float, nullable=False)
-    address = db.Column(db.String(255), nullable=False)
     pin_code = db.Column(db.String(20), nullable=False)
+    city = db.Column(db.String(50), nullable=False)
+    state = db.Column(db.String(50), nullable=False)
+    district = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    price_per_hour = db.Column(db.Float, nullable=False)
     floor_level = db.Column(db.Integer, default=1)
     maximum_number_of_spots = db.Column(db.Integer, nullable=False)
     revenue = db.Column(db.Float, default=0.0)

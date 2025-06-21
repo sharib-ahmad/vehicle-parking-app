@@ -77,11 +77,13 @@ def add_parking_lot():
         try:
             # Create a new parking lot
             new_lot = ParkingLot(
-                name=form.name.data,
                 prime_location_name=form.prime_location_name.data,
-                price_per_hour=form.price_per_hour.data,
-                address=form.address.data,
                 pin_code=form.pin_code.data,
+                city=form.city.data,
+                state=form.state.data,
+                district=form.district.data,
+                address=f'{form.prime_location_name.data}, {form.city.data}, {form.district.data}, {form.pin_code.data}, {form.state.data}',
+                price_per_hour=form.price_per_hour.data,
                 floor_level=form.floor_level.data,
                 maximum_number_of_spots=form.maximum_number_of_spots.data,
                 open_time=form.open_time.data,
@@ -100,9 +102,9 @@ def add_parking_lot():
                 db.session.add(spot)
             db.session.commit()
 
-            flash(f'Parking lot "{form.name.data}" created successfully.', "success")
+            flash(f'Parking lot "{form.prime_location_name.data}" created successfully.', "success")
             current_app.logger.info(
-                f'Parking lot "{form.name.data}" created successfully by admin {current_user.id}'
+                f'Parking lot "{form.prime_location_name.data}" created successfully by admin {current_user.id}'
             )
             return redirect(url_for("admin.parking_lots"))
 
@@ -141,9 +143,9 @@ def edit_parking_lot(lot_id):
             parking_lot.is_active = form.is_active.data == "true"
             db.session.commit()
 
-            flash(f'Parking lot "{parking_lot.name}" updated successfully.', "success")
+            flash(f'Parking lot "{parking_lot.prime_location_name}" updated successfully.', "success")
             current_app.logger.info(
-                f'Parking lot "{parking_lot.name}" updated by admin {current_user.id}'
+                f'Parking lot "{parking_lot.prime_location_name}" updated by admin {current_user.id}'
             )
             return redirect(url_for("admin.parking_lots"))
 
@@ -170,7 +172,7 @@ def delete_parking_lot(lot_id):
     if lot.occupied_spots > 0:
         flash("Cannot delete a parking lot with occupied spots.", "danger")
         current_app.logger.warning(
-            f'Attempt to delete occupied lot "{lot.name}" by admin {current_user.id}'
+            f'Attempt to delete occupied lot "{lot.prime_location_name}" by admin {current_user.id}'
         )
         return redirect(url_for("admin.parking_lots"))
 
@@ -179,11 +181,11 @@ def delete_parking_lot(lot_id):
         db.session.commit()
 
         flash(
-            f'Parking lot "{lot.name}" and all related spots have been deleted.',
+            f'Parking lot "{lot.prime_location_name}" and all related spots have been deleted.',
             "success",
         )
         current_app.logger.info(
-            f'Parking lot "{lot.name}" and all related spots deleted by admin {current_user.id}'
+            f'Parking lot "{lot.prime_location_name}" and all related spots deleted by admin {current_user.id}'
         )
         return redirect(url_for("admin.parking_lots"))
 
@@ -303,9 +305,11 @@ def search():
         if category in ["location", "pin_code"]:
             lots = ParkingLot.query.filter(
                 or_(
-                    ParkingLot.name.ilike(f"%{search_location}%"),
-                    ParkingLot.pin_code.ilike(f"%{search_location}%"),
                     ParkingLot.prime_location_name.ilike(f"%{search_location}%"),
+                    ParkingLot.pin_code.ilike(f"%{search_location}%"),
+                    ParkingLot.city.ilike(f"%{search_location}%"),
+                    ParkingLot.district.ilike(f"%{search_location}%"),
+                    ParkingLot.state.ilike(f"%{search_location}%"),
                 )
             ).all()
         elif category in ["user_id", "full_name", "phone_number", "email"]:
@@ -360,7 +364,7 @@ def summary():
 def revenue_chart():
     """Generates a pie chart for revenue from each parking lot with total revenue display."""
     lots = ParkingLot.query.filter_by(is_active=True).all()
-    labels = [lot.name for lot in lots]
+    labels = [lot.prime_location_name for lot in lots]
     revenues = [lot.revenue for lot in lots]
     total_revenue = sum(revenues)
 
@@ -418,7 +422,7 @@ def parking_summary_chart():
     lot_names, available_counts, occupied_counts, total_counts = [], [], [], []
 
     for lot in parking_lots:
-        lot_names.append(lot.name)
+        lot_names.append(lot.prime_location_name)
         available_counts.append(lot.available_spots_count())
         occupied_counts.append(lot.occupied_spots)
         total_counts.append(lot.maximum_number_of_spots)
@@ -481,7 +485,7 @@ def download_parking_lot_summary():
     total_revenue = 0
 
     for lot in lots:
-        name = lot.name
+        name = lot.prime_location_name
         floor = lot.floor_level
         open_time = lot.open_time.strftime("%H:%M") if lot.open_time else "N/A"
         close_time = lot.close_time.strftime("%H:%M") if lot.close_time else "N/A"
