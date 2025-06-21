@@ -65,25 +65,6 @@ python app.py
 ---
 
 
-## 🛡️ Checksum Verification
-
-To ensure integrity, use the following script:
-
-```bash
-pip install checksumdir
-python check.py
-```
-
-**Checksum Output**:
-
-```
-Directory Checksum: `your-checksum-here`
-```
-
-> This verifies the folder was not changed after submission.
-
----
-
 ## 🎥 Demo Video
 
 Link: [https://drive.google.com/file/d/your-video-link](https://drive.google.com/file/d/1K6dNET8AUnN19ZU2LPB1lYmA8QSx-yPp/view?usp=sharing)
