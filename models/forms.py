@@ -5,10 +5,12 @@
 """
 
 from flask_wtf import FlaskForm
-from wtforms import (BooleanField, DateField, DateTimeField, FileField,
-                     FloatField, HiddenField, IntegerField, PasswordField,
-                     SelectField, StringField, SubmitField, TextAreaField,
-                     TimeField)
+from wtforms import (
+    DateField, DateTimeField, FloatField, HiddenField, IntegerField,
+    PasswordField, SelectField, StringField, SubmitField, TextAreaField,
+    TimeField
+)
+from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import (DataRequired, Email, EqualTo, Length,
                                 NumberRange, ValidationError)
 
@@ -90,7 +92,7 @@ class ParkingLotForm(FlaskForm):
     pin_code = StringField(label="Pin Code", validators=[DataRequired()])
     floor_level = SelectField(
         label="Floor Level",
-        choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")],
+        choices=[('Ground','Ground'),("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")],
         validators=[DataRequired()],
     )
     maximum_number_of_spots = IntegerField(
@@ -294,7 +296,9 @@ class ProfileForm(FlaskForm):
     date_of_birth = DateField(
         "Date of Birth", format="%Y-%m-%d", validators=[DataRequired()]
     )
-    profile_pic = FileField("Profile Picture")
+    profile_pic = FileField("Profile Picture", validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'webp'], 'Images only!')
+    ])
     save_changes = SubmitField("Save Changes")
     delete_profile = SubmitField("Delete Profile")
 
