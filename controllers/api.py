@@ -206,7 +206,6 @@ class UserApi(Resource):
 
 # Request Parser for Parking Lot
 parking_args = reqparse.RequestParser()
-parking_args.add_argument("name", type=str, required=True, help="Name is required")
 parking_args.add_argument(
     "prime_location_name",
     type=str,
@@ -216,9 +215,9 @@ parking_args.add_argument(
 parking_args.add_argument(
     "price_per_hour", type=float, required=True, help="Price per hour is required"
 )
-parking_args.add_argument(
-    "address", type=str, required=True, help="Address is required"
-)
+parking_args.add_argument("city", type=str, required=True, help="City is required")
+parking_args.add_argument("state", type=str, required=True, help="State is required")
+parking_args.add_argument("district", type=str, required=True, help="District is required")
 parking_args.add_argument(
     "pin_code", type=str, required=True, help="Pin code is required"
 )
@@ -236,12 +235,13 @@ parking_args.add_argument("close_time", type=str)
 # Output Fields for Parking Lot
 parking_fields = {
     "id": fields.Integer,
-    "name": fields.String,
     "prime_location_name": fields.String,
     "price_per_hour": fields.Float,
-    "address": fields.String,
+    "city": fields.String,
+    "district": fields.String,
+    "state": fields.String,
     "pin_code": fields.String,
-    "floor_level": fields.Integer,
+    "floor_level": fields.String,
     "maximum_number_of_spots": fields.Integer,
     "revenue": fields.Float,
     "is_active": fields.Boolean,
@@ -288,10 +288,11 @@ class ParkingLotApi(Resource):
             )
 
             new_lot = ParkingLot(
-                name=args["name"],
                 prime_location_name=args["prime_location_name"],
+                city=args["city"],
+                district=args["district"],
+                state=args["state"],
                 price_per_hour=args["price_per_hour"],
-                address=args["address"],
                 pin_code=args["pin_code"],
                 floor_level=args.get("floor_level", 1),
                 maximum_number_of_spots=args["maximum_number_of_spots"],
