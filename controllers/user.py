@@ -48,6 +48,7 @@ def dashboard():
     """
     form = UserSearchForm()
     lots = []
+    now = datetime.now(IST).time()
     search_location = session.get("search_location", "")
 
     if form.validate_on_submit():
@@ -59,13 +60,16 @@ def dashboard():
     if search_location:
         lots = ParkingLot.query.filter(
             or_(
-                ParkingLot.name.ilike(f"%{search_location}%"),
+                ParkingLot.prime_location_name.ilike(f"%{search_location}%"),
                 ParkingLot.pin_code.ilike(f"%{search_location}%"),
                 ParkingLot.prime_location_name.ilike(f"%{search_location}%"),
+                ParkingLot.city.ilike(f"%{search_location}%"),
+                ParkingLot.state.ilike(f"%{search_location}%"),
+                ParkingLot.district.ilike(f"%{search_location}%")
             )
         ).all()
     else:
-        now = datetime.now(IST).time()  # get current time
+        
 
         # Fetch lots that are active and currently open
         lots = ParkingLot.query.filter(
@@ -89,6 +93,7 @@ def dashboard():
         parking_lots=lots,
         search_location=search_location,
         reservations=reservations,
+        current_time=now,
     )
 
 

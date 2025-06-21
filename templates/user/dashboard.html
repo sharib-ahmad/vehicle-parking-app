@@ -27,8 +27,8 @@ Vehicle-P | Home
             <tbody>
                 {% for res in reservations[:6] %}
                 <tr>
-                    <td>{{ res.id }}</td>
-                    <td>{{ res.parking_spot.parking_lot.name if res.parking_spot and res.parking_spot.parking_lot else
+                    <td>{{ res.user_id }}</td>
+                    <td>{{ res.parking_spot.parking_lot.prime_location_name if res.parking_spot and res.parking_spot.parking_lot else
                         'Deleted Lot' }}</td>
                     <td>{{ res.vehicle_number }}</td>
 
@@ -61,7 +61,7 @@ Vehicle-P | Home
                 {% for res in reservations[6:15] %}
                 <tr class="extra-row d-none">
                     <td>{{ res.id }}</td>
-                    <td>{{ res.parking_spot.parking_lot.name if res.parking_spot and res.parking_spot.parking_lot else
+                    <td>{{ res.parking_spot.parking_lot.prime_location_name if res.parking_spot and res.parking_spot.parking_lot else
                         'Deleted Lot' }}</td>
                     <td>{{ res.vehicle_number }}</td>
 

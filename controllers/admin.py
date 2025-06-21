@@ -362,77 +362,89 @@ def summary():
 @admin_bp.route("/chart/revenue")
 @admin_required
 def revenue_chart():
-    """Generates a pie chart for revenue from each parking lot with total revenue display."""
+    """Generates a readable pie chart with percentage on slices and legend for locations."""
     lots = ParkingLot.query.filter_by(is_active=True).all()
-    labels = [lot.prime_location_name for lot in lots]
-    revenues = [lot.revenue for lot in lots]
+
+    filtered_lots = [lot for lot in lots if lot.revenue > 0]
+    labels = [f"{lot.prime_location_name} (Floor {lot.floor_level})" for lot in filtered_lots]
+    revenues = [lot.revenue for lot in filtered_lots]
     total_revenue = sum(revenues)
 
-    fig, ax = plt.subplots(figsize=(6, 6))
+    fig, ax = plt.subplots(figsize=(12, 10))
 
-    if not any(revenues):
+    if not revenues:
         ax.text(
             0.5,
             0.5,
             "No Revenue Data",
             horizontalalignment="center",
             verticalalignment="center",
-            fontsize=14,
+            fontsize=18,
             color="gray",
         )
     else:
         wedges, texts, autotexts = ax.pie(
             revenues,
-            labels=labels,
-            autopct="%1.1f%%",
+            labels=None,  # No label names on slices
+            autopct="%1.1f%%",  # ✅ Show percentage on pie
             startangle=90,
             wedgeprops={"width": 0.4},
-            textprops={"fontsize": 10},
+            textprops={"fontsize": 18, "color": "black"},  # % font size
         )
 
-        ax.set_title("Revenue from Each Parking Lot", fontsize=14)
+        ax.set_title("Revenue from Each Parking Lot", fontsize=20)
 
-        # Add total revenue text
         ax.text(
             0.5,
-            -0.05,
+            -0.1,
             f"Total Revenue: ₹{total_revenue:.2f}",
             ha="center",
             va="center",
-            fontsize=12,
-            bbox=dict(
-                boxstyle="round,pad=0.4", facecolor="lightyellow", edgecolor="gray"
-            ),
+            fontsize=16,
+            bbox=dict(boxstyle="round,pad=0.5", facecolor="lightyellow", edgecolor="gray"),
             transform=ax.transAxes,
+        )
+
+        ax.legend(
+            wedges,
+            labels,
+            title="Parking Lots",
+            loc="center left",
+            bbox_to_anchor=(1, 0.5),
+            fontsize=18,
+            title_fontsize=20,
         )
 
     fig.tight_layout()
     output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
+    fig.savefig(output, format="png", bbox_inches="tight")
+    output.seek(0)
     plt.close(fig)
 
     return Response(output.getvalue(), mimetype="image/png")
 
 
+
+
+
 @admin_bp.route("/chart/parking-lots")
 @admin_required
 def parking_summary_chart():
-    """Generates a bar chart showing available vs. occupied spots."""
+    """Generates a bar chart showing available vs. occupied spots per lot and floor."""
     parking_lots = ParkingLot.query.all()
-    lot_names, available_counts, occupied_counts, total_counts = [], [], [], []
+    lot_labels, available_counts, occupied_counts, total_counts = [], [], [], []
 
     for lot in parking_lots:
-        lot_names.append(lot.prime_location_name)
+        label = f"{lot.prime_location_name} (Floor {lot.floor_level})"
+        lot_labels.append(label)
         available_counts.append(lot.available_spots_count())
         occupied_counts.append(lot.occupied_spots)
         total_counts.append(lot.maximum_number_of_spots)
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    x = range(len(lot_names))
+    x = range(len(lot_labels))
 
-    ax.bar(
-        x, available_counts, width=0.4, label="Available", color="green", align="center"
-    )
+    ax.bar(x, available_counts, width=0.4, label="Available", color="green", align="center")
     ax.bar(
         x,
         occupied_counts,
@@ -444,13 +456,13 @@ def parking_summary_chart():
     )
 
     ax.set_xticks(x)
-    ax.set_xticklabels(lot_names, rotation=45, ha="right")
+    ax.set_xticklabels(lot_labels, rotation=45, ha="right")
     ax.set_ylabel("Number of Spots")
     ax.set_title("Available vs Occupied Parking Spots")
     ax.yaxis.grid(True, linestyle="--", linewidth=0.5, color="black", alpha=0.6)
     ax.legend()
 
-    # Add labels on top of each bar
+    # Add text above each stacked bar
     for i, total in enumerate(total_counts):
         total_height = available_counts[i] + occupied_counts[i]
         ax.text(
@@ -462,16 +474,17 @@ def parking_summary_chart():
             fontsize=10,
             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="black", alpha=0.8),
         )
-    ax.set_ylim(0, max(total_counts) + 15)
 
+    ax.set_ylim(0, max(total_counts) + 15)
     fig.tight_layout()
-    canvas = FigureCanvas(fig)
+
     img_io = io.BytesIO()
-    canvas.print_png(img_io)
+    FigureCanvas(fig).print_png(img_io)
     img_io.seek(0)
     plt.close(fig)
 
     return Response(img_io.getvalue(), mimetype="image/png")
+
 
 
 @admin_bp.route("/download/parking-lot-summary")
