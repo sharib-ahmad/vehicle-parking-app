@@ -42,7 +42,7 @@ User Profile
                 {{ form.save_changes(class="btn btn-success px-4 mb-2") }}
 
                 <!-- Trigger modal -->
-                {% if current_user.role == 'UserRole.USER' %}
+                {% if not current_user.is_admin() %}
                 <button type="button" class="btn btn-danger px-4 mb-2" data-bs-toggle="modal"
                     data-bs-target="#deleteModal">
                     Delete Profile
