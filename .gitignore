@@ -34,3 +34,5 @@ Thumbs.db
 #img
 *.png
 *.jpg
+!static/images/*.png
+!static/images/*.jpg
