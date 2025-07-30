@@ -1,19 +1,4 @@
-/*
-================================================
-Ultra-Modern Styles for Admin Dashboard Pages
-v3.0 - Revamped & Animated
-================================================
-*/
 
-/* ===============================================
-   1. ROOT VARIABLES & GLOBAL STYLES
-=============================================== */
-
-/*
-   Defining a modern color palette and design tokens.
-   These are inspired by the variables mentioned in the original
-   CSS but are fully defined here for a complete solution.
-*/
 :root {
     --primary-bg: #f8f9fa;        /* Light grey for page background */
     --secondary-bg: #ffffff;      /* White for cards, modals, etc. */
@@ -259,40 +244,6 @@ body {
 
 .form-control::placeholder {
     color: var(--text-secondary);
-}
-
-/* --- Improved "Is Active" Form Switch --- */
-.form-switch {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    padding-left: 0; /* Override Bootstrap's default */
-}
-
-.form-check-input {
-    width: 3.25em;
-    height: 1.75em;
-    cursor: pointer;
-    margin-right: 1em;
-    background-color: var(--tertiary-bg);
-    border-color: var(--border-color);
-    transition: var(--transition-fast);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23adb5bd'/%3e%3c/svg%3e");
-}
-
-.form-check-input:checked {
-    background-color: var(--accent-primary);
-    border-color: var(--accent-primary);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
-}
-
-.form-check-input:focus {
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23adb5bd'/%3e%3c/svg%3e");
-}
-.form-check-input:checked:focus {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
 
 

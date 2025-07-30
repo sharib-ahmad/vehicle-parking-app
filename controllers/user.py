@@ -163,20 +163,18 @@ def reserve_spot(lot_id):
         return redirect(url_for("user.dashboard"))
     
     try:
-        headers = {
-            "User-Agent": "Mozilla/5.0"
-        }
-        color_response = requests.get("https://csscolorsapi.com/api/colors", headers=headers)
+        color_df = pd.read_csv("colors.csv", encoding='utf-8')
+        color_df = color_df.dropna(subset=["name"])
         
-        if color_response.ok:
-            colors = color_response.json().get("colors", [])
-            form.color.choices = [(c["name"], c["name"]) for c in colors]
-        else:
-            flash("Failed to load colors from API", "warning")
+        # Ensure name column is stripped and capitalized properly
+        color_df["name"] = color_df["name"].str.strip()
 
-    except requests.RequestException as e:
-        current_app.logger.error(f"Failed to fetch data from external APIs: {e}")
-        flash("Could not load vehicle data. Please try again later.", "danger")
+        # Create color choices: (value, label)
+        form.color.choices = [(row["key"], row["name"]) for _, row in color_df.iterrows()]
+    except FileNotFoundError:
+        current_app.logger.error("colors.csv not found")
+        flash("Could not load vehicle colors. Please try again later.", "danger")
+
 
 
 

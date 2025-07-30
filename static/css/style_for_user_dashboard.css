@@ -1,9 +1,4 @@
-/*
-================================================
-Vibrant User Interface Styles
-v2.1 - Modern UI/UX with Refined Animations and Fixes
-================================================
-*/
+
 
 /* Import Modern Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
@@ -242,9 +237,11 @@ html[data-theme='dark'] .container::after {
 }
 
 /* ===============================================
-   5. CARDS - Modern and Sleek Design
+   5. CARDS - Ultra-Modern and Sleek Design with Dark Mode
 =============================================== */
-.data-card {
+
+/* Base Card Styles */
+.data-card, .card, .custom-card {
   background: var(--user-card-bg);
   border: 1px solid var(--user-border-light);
   border-radius: var(--user-border-radius-lg);
@@ -257,51 +254,350 @@ html[data-theme='dark'] .container::after {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.data-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--user-shadow-lg), var(--user-shadow-glow);
-  border-color: var(--user-accent-primary);
-  background: var(--user-glass-bg);
-}
-
-.data-card::before {
+/* Animated gradient border effect */
+.data-card::before, .card::before, .custom-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--user-accent-gradient);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--user-transition-normal);
+  z-index: 1;
 }
 
-.data-card:hover::before {
+/* Subtle glow effect on the back */
+.data-card::after, .card::after, .custom-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--user-accent-glow) 0%, transparent 70%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform var(--user-transition-slow);
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* Hover Effects */
+.data-card:hover, .card:hover, .custom-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--user-shadow-lg), var(--user-shadow-glow);
+  border-color: var(--user-accent-primary);
+  background: var(--user-glass-bg);
+}
+
+.data-card:hover::before, .card:hover::before, .custom-card:hover::before {
   transform: scaleX(1);
 }
 
+.data-card:hover::after, .card:hover::after, .custom-card:hover::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Card Title Styling */
 .card-title {
   font-family: var(--user-font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 700;
   margin-bottom: 1rem;
-  transition: color var(--user-transition-normal);
+  color: var(--user-text-primary);
+  transition: var(--user-transition-normal);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* Card Content */
-.data-card p {
+.card-title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--user-accent-gradient);
+  transition: width var(--user-transition-normal);
+}
+
+.data-card:hover .card-title::after, 
+.card:hover .card-title::after, 
+.custom-card:hover .card-title::after {
+  width: 100%;
+}
+
+/* Card Body Styling */
+.card-body {
+  background: transparent;
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Card Content Text */
+.data-card p, .card p, .custom-card p {
   font-size: 0.95rem;
   color: var(--user-text-secondary);
-  line-height: 1.5;
-  margin: 0;
-  transition: color var(--user-transition-fast);
+  line-height: 1.6;
+  margin: 0.25rem 0;
+  transition: var(--user-transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.data-card:hover p {
+.data-card:hover p, .card:hover p, .custom-card:hover p {
   color: var(--user-text-primary);
+  transform: translateX(5px);
+}
+
+/* Icon Effects in Cards */
+.data-card i, .card i, .custom-card i {
+  transition: var(--user-transition-bounce);
+  width: 20px;
+  text-align: center;
+}
+
+.data-card:hover i, .card:hover i, .custom-card:hover i {
+  transform: scale(1.2) rotate(5deg);
+}
+
+/* Specific icon colors */
+.fa-location-dot {
+  color: var(--user-danger) !important;
+  filter: drop-shadow(0 0 8px rgba(248, 113, 113, 0.4));
+}
+
+.fa-map {
+  color: var(--user-text-secondary) !important;
+}
+
+.fa-indian-rupee-sign {
+  color: var(--user-success) !important;
+  filter: drop-shadow(0 0 8px rgba(45, 212, 191, 0.4));
+}
+
+.fa-layer-group {
+  color: var(--user-accent-tertiary) !important;
+  filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.4));
+}
+
+/* Card Link Styling */
+.card a, .data-card a, .custom-card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+/* Card Click to Register Text */
+.card p:last-child, .custom-card p:last-child {
+  margin-top: auto;
+  text-align: center;
+  font-weight: 600;
+  color: var(--user-accent-primary) !important;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, var(--user-accent-glow), transparent);
+  border-radius: var(--user-border-radius-sm);
+  border: 1px solid var(--user-accent-primary);
+  opacity: 0.8;
+  transition: var(--user-transition-normal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+}
+
+.data-card:hover p:last-child, 
+.card:hover p:last-child, 
+.custom-card:hover p:last-child {
+  opacity: 1;
+  background: var(--user-accent-gradient);
+  color: var(--user-text-on-accent) !important;
+  transform: scale(1.05);
+  box-shadow: var(--user-shadow-sm);
+}
+
+/* Animation for cards appearing in sequence */
+.animate-fade-in {
+  animation: userCardSequence 0.6s ease-out forwards;
+  animation-delay: calc(var(--animation-order, 0) * 0.1s);
+  opacity: 0;
+}
+
+@keyframes userCardSequence {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Dark Theme Specific Adjustments */
+html[data-theme='dark'] .data-card,
+html[data-theme='dark'] .card,
+html[data-theme='dark'] .custom-card {
+  background: var(--user-card-bg);
+  border-color: var(--user-border-light);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme='dark'] .data-card:hover,
+html[data-theme='dark'] .card:hover,
+html[data-theme='dark'] .custom-card:hover {
+  background: var(--user-glass-bg);
+  box-shadow: var(--user-shadow-lg), 0 0 30px rgba(91, 33, 182, 0.4);
+}
+
+html[data-theme='dark'] .card-title {
+  color: var(--user-text-primary);
+}
+
+html[data-theme='dark'] .data-card p,
+html[data-theme='dark'] .card p,
+html[data-theme='dark'] .custom-card p {
+  color: var(--user-text-secondary);
+}
+
+html[data-theme='dark'] .data-card:hover p,
+html[data-theme='dark'] .card:hover p,
+html[data-theme='dark'] .custom-card:hover p {
+  color: var(--user-text-primary);
+}
+
+/* Shimmer effect for loading cards */
+.card-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 1.5s ease;
+  z-index: 1;
+}
+
+.card-shimmer:hover::before {
+  left: 100%;
+}
+
+/* Pulse effect for important cards */
+.card-pulse {
+  animation: userCardPulse 3s ease-in-out infinite;
+}
+
+@keyframes userCardPulse {
+  0%, 100% {
+    box-shadow: var(--user-shadow-md);
+  }
+  50% {
+    box-shadow: var(--user-shadow-lg), var(--user-shadow-glow);
+  }
+}
+
+/* Responsive Card Adjustments */
+@media (max-width: 768px) {
+  .data-card, .card, .custom-card {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+
+  .data-card p, .card p, .custom-card p {
+    font-size: 0.9rem;
+  }
+
+  .data-card:hover, .card:hover, .custom-card:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+@media (max-width: 576px) {
+  .data-card, .card, .custom-card {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  .data-card p, .card p, .custom-card p {
+    font-size: 0.85rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Special effects for featured cards */
+.card-featured {
+  border: 2px solid var(--user-accent-primary);
+  background: var(--user-glass-bg);
+  position: relative;
+}
+
+.card-featured::before {
+  background: var(--user-accent-gradient);
+  height: 4px;
+  transform: scaleX(1);
+}
+
+.card-featured .card-title {
+  color: var(--user-accent-primary);
+}
+
+/* Micro-interactions */
+.card-interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.card-interactive:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Glassmorphism effect enhancement */
+.card-glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+html[data-theme='dark'] .card-glass {
+  background: rgba(42, 52, 66, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ===============================================
@@ -572,7 +868,6 @@ html[data-theme='dark'] .container::after {
 }
 
 .btn-close {
-  background: none;
   border: none;
   font-size: 1.25rem;
   color: var(--user-text-secondary);
@@ -586,7 +881,6 @@ html[data-theme='dark'] .container::after {
   opacity: 1;
   color: var(--user-danger);
   transform: scale(1.1) rotate(90deg);
-  background: var(--user-danger-light);
 }
 
 /* ===============================================

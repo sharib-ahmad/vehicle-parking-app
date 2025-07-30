@@ -6,11 +6,13 @@
 {% endblock %}
 
 {% block main_content %}
-<div class="modal fade" id="editParkingLotModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editParkingLotModalLabel" aria-hidden="true">
+<div class="modal fade" id="editParkingLotModal" data-bs-backdrop="static" tabindex="-1"
+  aria-labelledby="editParkingLotModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editParkingLotModalLabel"><i class="fas fa-edit icon"></i>Edit Parking Lot #{{ parking_lot.id }}</h5>
+        <h5 class="modal-title" id="editParkingLotModalLabel"><i class="fas fa-edit icon"></i>Edit Parking Lot #{{
+          parking_lot.id }}</h5>
         <a href="{{ url_for('admin.parking_lots') }}" class="btn-close"></a>
       </div>
       <div class="modal-body">
@@ -49,11 +51,9 @@
               {{ form.price_per_hour.label(class="form-label") }}
               {{ form.price_per_hour(class="form-control", step="0.01") }}
             </div>
-             <div class="col-md-6">
-                <div class="form-check form-switch">
-                  {{ form.is_active(class="form-check-input") }}
-                  {{ form.is_active.label(class="form-check-label") }}
-                </div>
+            <div class="col-md-6">
+              {{ form.is_active.label(class="form-label") }}
+              {{ form.is_active(class="form-select") }}
             </div>
             <div class="col-md-6">
               {{ form.open_time.label(class="form-label") }}
@@ -77,7 +77,7 @@
 
 {% block scripts %}
 <script>
-  window.onload = function() {
+  window.onload = function () {
     var myModal = new bootstrap.Modal(document.getElementById('editParkingLotModal'));
     myModal.show();
   };
