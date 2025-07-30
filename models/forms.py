@@ -92,7 +92,7 @@ class ParkingLotForm(FlaskForm):
     pin_code = StringField(label="Pin Code", validators=[DataRequired()])
     floor_level = SelectField(
         label="Floor Level",
-        choices=[('Ground','Ground'),("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")],
+        choices=[('0','Ground'),("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")],
         validators=[DataRequired()],
     )
     maximum_number_of_spots = IntegerField(

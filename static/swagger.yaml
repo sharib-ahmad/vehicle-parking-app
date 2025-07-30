@@ -33,7 +33,7 @@ info:
     ❗ For direct API calls (e.g., via Postman or code), ensure you're authenticated through the login endpoint or have a valid session.
 
     ## 📷 Entity-Relationship Diagram (ERD):
-    ![ERD](http://127.0.0.1:5000/static/images/erd.png)
+    ![ERD](/static/images/erd.png)
     ## 📜 License
     ---
     Built with ❤️ by **Sharib Ahmad** (Roll No. 24f2001786)

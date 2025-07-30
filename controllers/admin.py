@@ -112,7 +112,7 @@ def add_parking_lot():
             db.session.rollback()
             flash("An error occurred while saving to the database.", "danger")
             current_app.logger.error(f"Database error (add lot): {str(e)}")
-            return redirect(url_for("admin.add_parking_lot"))
+            return redirect(url_for("admin.parking_lots"))
 
         finally:
             db.session.close()
@@ -153,7 +153,7 @@ def edit_parking_lot(lot_id):
             db.session.rollback()
             flash("An error occurred while saving to the database.", "danger")
             current_app.logger.error(f"Database error (edit lot): {str(e)}")
-            return redirect(url_for("admin.edit_parking_lot", lot_id=lot_id))
+            return redirect(url_for("admin.parking_lots"))
 
         finally:
             db.session.close()
