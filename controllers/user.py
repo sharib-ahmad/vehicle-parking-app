@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 from flask import (Blueprint, Response, current_app, flash, redirect,
-                    render_template, request, session, url_for)
+                    render_template, request, session, url_for, send_file, abort)
 from flask_login import current_user, login_required, logout_user
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from sqlalchemy import or_
@@ -401,11 +401,8 @@ def profile():
         current_user.profile.date_of_birth = form.date_of_birth.data
 
         if form.profile_pic.data:
-            filename = f"{current_user.id}.jpg"
-            filepath = os.path.join(current_app.static_folder, "user_images", filename)
-            os.makedirs(os.path.dirname(filepath), exist_ok=True)
-            form.profile_pic.data.save(filepath)
-            current_user.profile.profile_pic = os.path.join("user_images", filename)
+            current_user.profile.image = form.profile_pic.data.read()
+            current_user.profile.image_mimetype = form.profile_pic.data.mimetype
 
         if form.save_changes.data:
             db.session.commit()
@@ -425,7 +422,14 @@ def profile():
     form.full_name.data = current_user.full_name
     return render_template("user/profile.html", form=form, user=current_user)
 
-
+@user_bp.route("/profile-image/<string:user_id>")
+@login_required
+def profile_image(user_id):
+    user_profile = UserProfile.query.filter_by(user_id=user_id).first()
+    if user_profile and user_profile.image:
+        return send_file(io.BytesIO(user_profile.image), mimetype=user_profile.image_mimetype)
+    else:
+        return abort(404)
 # Background Tasks
 # Handles background tasks such as deleting scheduled users.
 

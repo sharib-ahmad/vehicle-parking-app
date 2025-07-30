@@ -108,13 +108,13 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
                                     id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    {% if current_user.profile.profile_pic %}
-                                    <img src="{{ url_for('static', filename=current_user.profile.profile_pic) }}"
-                                        alt="Profile" class="profile-picture">
+                                    {% if current_user.profile.image %}
+                                    <img src="{{ url_for('user.profile_image', user_id = current_user.id ) }}"
+                                        alt="Profile" class="fs-1 profile-picture">
                                     {% else %}
                                     <i class="fas fa-user-circle fa-lg"></i>
+                    
                                     {% endif %}
-                                    <span class="d-lg-none ms-2">Profile</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                                     <li><a class="dropdown-item" href="{{ url_for('user.profile') }}"><i

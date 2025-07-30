@@ -102,7 +102,8 @@ class UserProfile(db.Model):
         db.String(50), db.ForeignKey("users.id"), unique=True, nullable=False
     )
     bio = db.Column(db.Text)
-    profile_pic = db.Column(db.String(255))
+    image = db.Column(db.LargeBinary, nullable=True)
+    image_mimetype = db.Column(db.String(50), nullable=True)
     date_of_birth = db.Column(db.Date)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(IST))
     updated_at = db.Column(
