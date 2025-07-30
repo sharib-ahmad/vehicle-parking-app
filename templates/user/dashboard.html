@@ -28,7 +28,8 @@ Vehicle-P | Home
                 {% for res in reservations[:6] %}
                 <tr>
                     <td>{{ res.user_id }}</td>
-                    <td>{{ res.parking_spot.parking_lot.prime_location_name if res.parking_spot and res.parking_spot.parking_lot else
+                    <td>{{ res.parking_spot.parking_lot.prime_location_name if res.parking_spot and
+                        res.parking_spot.parking_lot else
                         'Deleted Lot' }}</td>
                     <td>{{ res.vehicle_number }}</td>
 
@@ -52,7 +53,7 @@ Vehicle-P | Home
                     </td>
                     {% else %}
                     <td>{{ res.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td><span class="custom-text">Parked Out</span></td>
+                    <td><span class="text-success fw-bold">Parked Out</span></td>
                     {% endif %}
 
                 </tr>
@@ -61,7 +62,8 @@ Vehicle-P | Home
                 {% for res in reservations[6:15] %}
                 <tr class="extra-row d-none">
                     <td>{{ res.id }}</td>
-                    <td>{{ res.parking_spot.parking_lot.prime_location_name if res.parking_spot and res.parking_spot.parking_lot else
+                    <td>{{ res.parking_spot.parking_lot.prime_location_name if res.parking_spot and
+                        res.parking_spot.parking_lot else
                         'Deleted Lot' }}</td>
                     <td>{{ res.vehicle_number }}</td>
 
@@ -85,7 +87,7 @@ Vehicle-P | Home
                     </td>
                     {% else %}
                     <td>{{ res.leaving_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td><span class="custom-text">Parked Out</span></td>
+                    <td><span class="text-success fw-bold">Parked Out</span></td>
                     {% endif %}
 
                 </tr>
@@ -125,7 +127,7 @@ Vehicle-P | Home
 
     <div class="row g-4 justify-content-center">
         {% for lot in parking_lots %}
-        <div class="col-sm-12 col-md-6 col-lg-4 d-flex">
+        <div class="col-sm-12 col-md-6 col-lg-4 d-flex" style="--animation-order: {{ loop.index }};">
             <a href="{{ url_for('user.reserve_spot', lot_id=lot.id) }}" class="text-decoration-none w-100">
                 <div class="card custom-card  w-100 animate-fade-in">
                     <div class="card-body d-flex flex-column">

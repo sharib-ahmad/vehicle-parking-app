@@ -1,48 +1,44 @@
 {% extends 'layout.html' %}
 {% block meta_tags %}
-<meta http-equiv="refresh" content="60">
+<meta http-equiv="refresh" content="30">
 {% endblock %}
 
-{% block title %}Admin Summary{% endblock %}
+{% block title %}Admin Dashboard Summary{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_admin_pages.css') }}">
+{% endblock %}
 
 {% block main_content %}
-<div class="container my-5">
-    <h2 class="text-center text-warning mb-4">
-        📊 Admin Dashboard Summary
-    </h2>
-    <p class="text-center text-muted mb-5">This dashboard shows revenue and parking statistics across all lots.</p>
+<div class="container py-4">
+    <div class="page-header">
+        <h1 class="page-title"><i class="fas fa-chart-pie icon"></i>Dashboard Summary</h1>
+    </div>
+    <p class="text-center mb-4">This dashboard shows revenue and parking statistics across all lots. Data refreshes automatically.</p>
 
-    <div class="row justify-content-center gy-5">
-
+    <div class="row g-4">
         <!-- Revenue Chart -->
-        <div class="col-12 col-md-6 d-flex flex-column align-items-center">
-            <div class="card shadow-sm w-100">
-                <div class="card-body text-center">
-                    <h4 class="card-title">💰 Revenue from Each Parking Lot</h4>
-                    <img src="{{ url_for('admin.revenue_chart') }}" alt="Revenue Chart" class="img-fluid rounded my-3"
-                        style="max-height: 350px; object-fit: contain;">
-                </div>
+        <div class="col-lg-6">
+            <div class="data-card summary-card">
+                <h4 class="card-title"><i class="fas fa-dollar-sign icon"></i>Revenue by Lot</h4>
+                <img src="{{ url_for('admin.revenue_chart') }}" alt="Revenue Chart">
             </div>
         </div>
 
         <!-- Parking Summary Chart -->
-        <div class="col-12 col-md-6 d-flex flex-column align-items-center">
-            <div class="card shadow-sm w-100">
-                <div class="card-body text-center">
-                    <h4 class="card-title">🅿️ Parking Lot Usage Summary</h4>
-                    <img src="{{ url_for('admin.parking_summary_chart') }}" alt="Parking Summary Chart"
-                        class="img-fluid rounded my-3" style="max-height: 350px; object-fit: contain;">
-                </div>
+        <div class="col-lg-6">
+            <div class="data-card summary-card">
+                <h4 class="card-title"><i class="fas fa-parking icon"></i>Parking Lot Usage</h4>
+                <img src="{{ url_for('admin.parking_summary_chart') }}" alt="Parking Summary Chart">
             </div>
         </div>
 
         <!-- Download Excel Button -->
         <div class="col-12 text-center mt-4">
-            <a href="{{ url_for('admin.download_parking_lot_summary') }}" class="btn btn-success btn-lg shadow">
-                ⬇️ Download Parking Lot Summary (Excel)
+            <a href="{{ url_for('admin.download_parking_lot_summary') }}" class="btn btn-success btn-lg">
+                <i class="fas fa-file-excel me-2"></i>Download Summary (Excel)
             </a>
         </div>
-
     </div>
 </div>
 {% endblock %}

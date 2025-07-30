@@ -12,6 +12,7 @@ from flask import Blueprint, current_app
 from flask_login import current_user, login_required
 from flask_restful import Api, Resource, abort, fields, marshal_with, reqparse
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.exceptions import HTTPException
 
 from models.model import (ParkingLot, ParkingSpot, SpotStatus, User, UserRole,
                     Vehicle, db)
@@ -525,6 +526,8 @@ vehicle_fields = {
 }
 
 
+
+
 class VehicleApi(Resource):
     @marshal_with(vehicle_fields)
     @login_required
@@ -562,6 +565,8 @@ class VehicleApi(Resource):
                     )
                 return vehicles
 
+        except HTTPException:
+            raise
         except Exception as e:
             current_app.logger.error(f"Error in VehicleApi GET: {str(e)}")
             abort(500, message="Internal server error")
@@ -597,6 +602,8 @@ class VehicleApi(Resource):
             )
             return new_vehicle, 201
 
+        except HTTPException:
+            raise
         except Exception as e:
             current_app.logger.error(f"Error creating vehicle: {str(e)}")
             db.session.rollback()
@@ -636,6 +643,8 @@ class VehicleApi(Resource):
             current_app.logger.info(f"Successfully updated vehicle: {vehicle_number}")
             return vehicle, 200
 
+        except HTTPException:
+            raise
         except Exception as e:
             current_app.logger.error(
                 f"Error updating vehicle {vehicle_number}: {str(e)}"
@@ -662,6 +671,8 @@ class VehicleApi(Resource):
             current_app.logger.info(f"Successfully deleted vehicle: {vehicle_number}")
             return {"message": f"Vehicle {vehicle_number} deleted successfully"}, 200
 
+        except HTTPException:
+            raise
         except Exception as e:
             current_app.logger.error(
                 f"Error deleting vehicle {vehicle_number}: {str(e)}"

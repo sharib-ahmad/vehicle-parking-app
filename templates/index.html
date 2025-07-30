@@ -1,149 +1,174 @@
 {% extends 'layout.html'%}
 {% block title %}
-Vehicle-P | Home
+ParkRight | Home
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_index.css') }}">
 {% endblock %}
+
 {% block main_content %}
-<section class="glow-content">
 
-    <div class="container-fluid p-0 text-center">
-        <div class="bg-img-one">
-            <div class="bg-content">
-                <h1>Welcome to <span class="no-break">Vehicle-P</span></h1>
-                <p class="pt-3">Your one-stop solution for vehicle parking management.</p>
-                <p class="pt-3">
-                    Streamline your parking operations with our intelligent system designed to reduce hassle,
-                    save time, and ensure security. Whether you're managing a small lot or a large facility,
-                    Vehicle-P helps you stay in control, every step of the way.
-                </p>
-            </div>
-        </div>
-
+<!-- ======================================= -->
+<!-- Hero Section with Particles -->
+<!-- ======================================= -->
+<section class="hero-section" id="hero">
+    <div class="hero-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
     </div>
-</section>
-
-<section class="why-us">
-    <div class="container-fluid text-center p-5">
-        <h2>WHY US&quest;</h2>
-        <p>
-            We bring simplicity and innovation together to offer a seamless parking experience. Our platform is
-            trusted by users for its reliability, cutting-edge technology, and commitment to customer satisfaction.
-        </p>
-        <div class="row row-cols-1 row-cols-md-3 g-4 m-0">
-            <div class="col">
-                <div class="card h-100 d-flex flex-column justify-content-center align-items-center">
-                    <img src="/static/images/1580307375_UkBFLlKDUE.svg" class="card-img-top img-fluid " alt="..."
-                        style="max-height: 15vh;">
-                    <div class="card-body">
-                        <h5 class="card-title">Superior Service</h5>
-                        <p class="card-text">
-                            We prioritize customer satisfaction with 24/7 support, fast responses, and clear guidance to ensure a hassle-free experience.
-                        </p>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <div class="hero-text-content" data-aos="fade-right">
+                    <h1 class="hero-title">
+                        Welcome to 
+                        <span class="gradient-text no-break">ParkRight</span>
+                        <span class="title-decoration">✨</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Your intelligent parking companion for the modern world
+                    </p>
+                    <p class="hero-description">
+                        Experience seamless parking management with cutting-edge technology. 
+                        Smart reservations, real-time availability, and hassle-free payments - all in one platform.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="{{ url_for('auth.sign_up') }}" class="btn btn-hero-primary">
+                            <span>Start Your Journey</span>
+                            <i class="fas fa-rocket"></i>
+                        </a>
+                        <a href="#features" class="btn btn-hero-outline">
+                            <span>Discover More</span>
+                            <i class="fas fa-arrow-down"></i>
+                        </a>
                     </div>
-
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100 d-flex flex-column justify-content-center align-items-center">
-                    <img src="/static/images/1580307404_vPmLrZGUrj.svg" class="card-img-top img-fluid" alt="..."
-                        style=" max-height: 15vh;">
-                    <div class="card-body">
-                        <h5 class="card-title">Innovative Technology</h5>
-                        <p class="card-text">
-                            Our system is built using modern tools and smart algorithms, offering automated tracking,
-                            real-time availability, and seamless user experience.
-                        </p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">10K+</div>
+                            <div class="stat-label">Happy Users</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Parking Lots</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
                     </div>
-
                 </div>
-            </div>
-            <div class="col">
-                <div class="card h-100 d-flex flex-column justify-content-center align-items-center">
-                    <img src="/static/images/1580307426_og6tGZBApw.svg" class="card-img-top img-fluid" alt="..."
-                        style=" max-height: 15vh;">
-                    <div class="card-body">
-                        <h5 class="card-title">End-to-End Solution</h5>
-                        <p class="card-text">
-                            From booking to payment, Vehicle-P covers every step of the parking process to give
-                            you a truly all-in-one experience.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="about-us py-5">
-    <div class="container text-center mb-5">
-        <h2>ABOUT US</h2>
-        <p>
-            At Vehicle-P, we are passionate about transforming the way people park. Our mission is to simplify parking management through smart technology and user-focused solutions. We are constantly evolving to meet the changing needs of modern urban environments.
-        </p>
-    </div>
-
-    <div class="container-fluid">
-        <div class="row align-items-center">
-            <div class="col-lg-6 text-center">
-                <img src="https://picsum.photos/400" alt="About Us" class="img-fluid rounded-5">
             </div>
             <div class="col-lg-6">
-                <p class="p-3">
-                    Vehicle-P started with a simple idea: make parking stress-free. Today, we serve thousands of users
-                    by offering tools that help locate, book, and manage parking spaces efficiently. Our team of
-                    engineers, designers, and support staff work tirelessly to deliver the best experience possible.
-                </p>
+                <div class="hero-visual" data-aos="fade-left">
+                    <div class="floating-card card-1">
+                        <i class="fas fa-car"></i>
+                        <span>Smart Parking</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Mobile First</span>
+                    </div>
+                    <div class="floating-card card-3">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>100% Secure</span>
+                    </div>
+                    <div class="hero-main-visual">
+                        <div class="visual-glow"></div>
+                        <i class="fas fa-parking hero-icon"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <div class="scroll-indicator">
+        <div class="scroll-dot"></div>
+    </div>
 </section>
 
-<section class="pricing-section text-center py-5">
+<!-- ======================================= -->
+<!-- Features Section -->
+<!-- ======================================= -->
+<section class="section features-section" id="features">
     <div class="container">
-        <h2 class="price-head">Buy Our Membership</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-4 mb-4">
-                <div class="card pricing-card">
-                    <div class="card-head price-tag"></div>
-                    <div class="price"><i class="fa-solid fa-indian-rupee-sign"></i>2K</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Basic</h5>
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-badge">Why Choose Us</span>
+            <h2 class="section-title">
+                Revolutionizing Your 
+                <span class="gradient-text">Parking Experience</span>
+            </h2>
+            <p class="section-subtitle">
+                Discover how our innovative platform transforms the way you think about parking, 
+                making it effortless, efficient, and enjoyable.
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card modern-card">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon gradient-bg-1">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="icon-glow glow-1"></div>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">24/7 Premium Support</h5>
                         <p class="card-text">
-                            Ideal for occasional users. Get access to all parking lots and enjoy basic support during operational hours.
+                            Round-the-clock assistance with our dedicated support team. 
+                            Get instant help whenever you need it, ensuring a seamless experience.
                         </p>
-                        <a href="#" class="btn btn-info" role="button">Read More ➞</a>
+                        <div class="feature-highlight">
+                            <span class="highlight-dot"></span>
+                            <span>Instant Response</span>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card pricing-card">
-                    <div class="card-head price-tag"></div>
-                    <div class="price"><i class="fa-solid fa-indian-rupee-sign"></i>5K</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Premium</h5>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card modern-card">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon gradient-bg-2">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="icon-glow glow-2"></div>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">AI-Powered Intelligence</h5>
                         <p class="card-text">
-                            Perfect for regular users. Enjoy priority support, reserved slots, and real-time tracking at your fingertips.
+                            Advanced machine learning algorithms predict availability, 
+                            optimize routes, and provide personalized parking recommendations.
                         </p>
-                        <a href="#" class="btn btn-info" role="button">Read More ➞</a>
+                        <div class="feature-highlight">
+                            <span class="highlight-dot"></span>
+                            <span>Smart Predictions</span>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card pricing-card">
-                    <div class="card-head price-tag"></div>
-                    <div class="price"><i class="fa-solid fa-indian-rupee-sign"></i>3K</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Standard</h5>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card modern-card">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon gradient-bg-3">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <div class="icon-glow glow-3"></div>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Complete Ecosystem</h5>
                         <p class="card-text">
-                            A balanced option offering extended support, quick bookings, and useful analytics to
-                            optimize your parking habits.
+                            From discovery to payment, enjoy a unified platform that handles 
+                            every aspect of your parking journey with elegance and efficiency.
                         </p>
-                        <a href="#" class="btn btn-info" role="button">Read More ➞</a>
+                        <div class="feature-highlight">
+                            <span class="highlight-dot"></span>
+                            <span>All-in-One Solution</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,45 +176,423 @@ Vehicle-P | Home
     </div>
 </section>
 
-<section class="feedback py-5">
-    <div class="container text-center">
-        <h2 class="mb-4">Feedback</h2>
-        <p class="mb-5">
-            Don’t just take our word for it. Here's what our users are saying about Vehicle-P and how it's improved their parking experience.
-        </p>
+<!-- ======================================= -->
+<!-- About Section -->
+<!-- ======================================= -->
+<section class="section about-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="about-image-wrapper">
+                    <div class="image-decoration decoration-1"></div>
+                    <div class="image-decoration decoration-2"></div>
+                    <img src="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?q=80&w=2400&auto=format&fit=crop" 
+                         alt="ParkRight Team" 
+                         class="about-image">
+                    <div class="image-overlay">
+                        <div class="overlay-content">
+                            <i class="fas fa-users"></i>
+                            <span>Our Amazing Team</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="about-content">
+                    <span class="section-badge">About ParkRight</span>
+                    <h2 class="section-title">
+                        Crafting the Future of 
+                        <span class="gradient-text">Urban Mobility</span>
+                    </h2>
+                    <p class="about-text">
+                        At ParkRight, we're passionate about solving urban challenges through innovative technology. 
+                        Our mission extends beyond simple parking solutions - we're building the infrastructure 
+                        for smarter, more sustainable cities.
+                    </p>
+                    <p class="about-text secondary">
+                        Founded by urban planning experts and tech visionaries, ParkRight has grown from a 
+                        simple idea into a comprehensive platform serving thousands of users worldwide.
+                    </p>
+                    
+                    <div class="about-features">
+                        <div class="about-feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>5+ Years of Innovation</span>
+                        </div>
+                        <div class="about-feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Award-Winning Technology</span>
+                        </div>
+                        <div class="about-feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Carbon Footprint Reduction</span>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="btn btn-about">
+                        <span>Our Story</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-        <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+<!-- ======================================= -->
+<!-- Pricing Section -->
+<!-- ======================================= -->
+<section class="section pricing-section" id="pricing">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-badge">Flexible Plans</span>
+            <h2 class="section-title">
+                Choose Your Perfect 
+                <span class="gradient-text">Membership</span>
+            </h2>
+            <p class="section-subtitle">
+                Transparent pricing with no hidden fees. All plans include our core features 
+                and world-class support to ensure your success.
+            </p>
+        </div>
+        
+        <div class="row justify-content-center g-4">
+            <!-- Basic Plan -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <div class="plan-icon basic-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h5 class="plan-name">Starter</h5>
+                        <p class="plan-description">Perfect for occasional parkers</p>
+                    </div>
+                    <div class="pricing-body">
+                        <div class="price-display">
+                            <span class="currency">₹</span>
+                            <span class="price">2,000</span>
+                            <span class="period">/ year</span>
+                        </div>
+                        <div class="savings-badge">Save 20%</div>
+                        <ul class="feature-list">
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Access to all parking lots</span>
+                            </li>
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Standard customer support</span>
+                            </li>
+                            <li class="feature-excluded">
+                                <i class="fas fa-times"></i>
+                                <span>Real-time availability tracking</span>
+                            </li>
+                            <li class="feature-excluded">
+                                <i class="fas fa-times"></i>
+                                <span>Reserved parking slots</span>
+                            </li>
+                        </ul>
+                        <button class="btn btn-pricing">
+                            <span>Get Started</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Plan (Featured) -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="pricing-card featured-plan">
+                    <div class="popular-badge">
+                        <i class="fas fa-crown"></i>
+                        <span>Most Popular</span>
+                    </div>
+                    <div class="pricing-header">
+                        <div class="plan-icon premium-icon">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <h5 class="plan-name">Premium</h5>
+                        <p class="plan-description">Ideal for daily commuters</p>
+                    </div>
+                    <div class="pricing-body">
+                        <div class="price-display">
+                            <span class="currency">₹</span>
+                            <span class="price">5,000</span>
+                            <span class="period">/ year</span>
+                        </div>
+                        <div class="savings-badge premium">Save 35%</div>
+                        <ul class="feature-list">
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Access to all parking lots</span>
+                            </li>
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Priority 24/7 support</span>
+                            </li>
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Real-time availability tracking</span>
+                            </li>
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Reserved parking slots</span>
+                            </li>
+                        </ul>
+                        <button class="btn btn-pricing-featured">
+                            <span>Choose Premium</span>
+                            <i class="fas fa-rocket"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standard Plan -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <div class="plan-icon standard-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h5 class="plan-name">Professional</h5>
+                        <p class="plan-description">Great for regular users</p>
+                    </div>
+                    <div class="pricing-body">
+                        <div class="price-display">
+                            <span class="currency">₹</span>
+                            <span class="price">3,000</span>
+                            <span class="period">/ year</span>
+                        </div>
+                        <div class="savings-badge">Save 25%</div>
+                        <ul class="feature-list">
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Access to all parking lots</span>
+                            </li>
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Extended support hours</span>
+                            </li>
+                            <li class="feature-included">
+                                <i class="fas fa-check"></i>
+                                <span>Real-time availability tracking</span>
+                            </li>
+                            <li class="feature-excluded">
+                                <i class="fas fa-times"></i>
+                                <span>Reserved parking slots</span>
+                            </li>
+                        </ul>
+                        <button class="btn btn-pricing">
+                            <span>Select Plan</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="400">
+            <p class="pricing-note">
+                <i class="fas fa-shield-alt"></i>
+                All plans include 30-day money-back guarantee and free migration support
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!-- Testimonials Section -->
+<!-- ======================================= -->
+<section class="section testimonials-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-badge">Success Stories</span>
+            <h2 class="section-title">
+                What Our Community 
+                <span class="gradient-text">Says About Us</span>
+            </h2>
+            <p class="section-subtitle">
+                Join thousands of satisfied users who have transformed their parking experience with ParkRight
+            </p>
+        </div>
+        
+        <div id="testimonialCarousel" class="carousel slide testimonial-carousel" data-bs-ride="carousel" data-bs-interval="5000">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="https://picsum.photos/200" class="rounded-circle mb-3" alt="Feedback 1">
-                    <p class="px-3">"Vehicle-P makes finding and booking a parking spot so much easier. I can't imagine parking without it now."</p>
-                    <h5>- John Doe</h5>
+                    <div class="testimonial-card modern-testimonial" data-aos="zoom-in">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">
+                                <i class="fas fa-quote-left"></i>
+                            </div>
+                            <p class="testimonial-text">
+                                "ParkRight has completely revolutionized my daily commute. The AI-powered recommendations 
+                                are spot-on, and I haven't had to circle around looking for parking in months!"
+                            </p>
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" 
+                                 class="author-image" alt="John Doe">
+                            <div class="author-info">
+                                <h6 class="author-name">John Doe</h6>
+                                <p class="author-title">Software Engineer</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
+                
                 <div class="carousel-item">
-                    <img src="https://picsum.photos/200?2" class="rounded-circle mb-3" alt="Feedback 2">
-                    <p class="px-3">"The technology behind Vehicle-P is impressive. It saves me time every day during my commute."</p>
-                    <h5>- Jane Smith</h5>
+                    <div class="testimonial-card modern-testimonial">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">
+                                <i class="fas fa-quote-left"></i>
+                            </div>
+                            <p class="testimonial-text">
+                                "The seamless integration and intuitive design make ParkRight a joy to use. 
+                                It's not just a parking app - it's a lifestyle upgrade that saves me time every single day."
+                            </p>
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" 
+                                 class="author-image" alt="Jane Smith">
+                            <div class="author-info">
+                                <h6 class="author-name">Jane Smith</h6>
+                                <p class="author-title">Marketing Director</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
+                
                 <div class="carousel-item">
-                    <img src="https://picsum.photos/200?3" class="rounded-circle mb-3" alt="Feedback 3">
-                    <p class="px-3">"Affordable, convenient, and reliable — Vehicle-P has completely changed how I view city parking."</p>
-                    <h5>- Alice Johnson</h5>
+                    <div class="testimonial-card modern-testimonial">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">
+                                <i class="fas fa-quote-left"></i>
+                            </div>
+                            <p class="testimonial-text">
+                                "Outstanding value and exceptional service! The premium features are worth every penny, 
+                                and the customer support team goes above and beyond to ensure satisfaction."
+                            </p>
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/46.jpg" 
+                                 class="author-image" alt="Alice Johnson">
+                            <div class="author-info">
+                                <h6 class="author-name">Alex Johnson</h6>
+                                <p class="author-title">Business Owner</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Controls -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon rounded-circle p-2" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-
-            <button class="carousel-control-next" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon rounded-circle p-2" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+            
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="2"></button>
+            </div>
         </div>
     </div>
 </section>
+
+<!-- ======================================= -->
+<!-- CTA Section -->
+<!-- ======================================= -->
+<section class="section cta-section">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <div class="cta-background">
+                <div class="cta-decoration decoration-1"></div>
+                <div class="cta-decoration decoration-2"></div>
+                <div class="cta-decoration decoration-3"></div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h2 class="cta-title">
+                        Ready to Transform Your 
+                        <span class="gradient-text">Parking Experience?</span>
+                    </h2>
+                    <p class="cta-subtitle">
+                        Join thousands of smart parkers who have already discovered the future of urban mobility.
+                        Start your journey today with our free trial.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="{{ url_for('auth.sign_up') }}" class="btn btn-cta">
+                        <span>Start Free Trial</span>
+                        <i class="fas fa-rocket"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<!-- AOS Animation Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: true,
+        offset: 100
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Parallax effect for hero section
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero-section');
+        if (hero) {
+            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+    });
+    
+    // Floating animation for hero cards
+    const floatingCards = document.querySelectorAll('.floating-card');
+    floatingCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.5}s`;
+    });
+});
+</script>
 {% endblock %}

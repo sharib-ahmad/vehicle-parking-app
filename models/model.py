@@ -1,11 +1,9 @@
 import enum
 from datetime import datetime, timedelta
-
 from flask import current_app
 from flask_login import UserMixin
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from models import db
 
 # Timezone Configuration
@@ -38,7 +36,7 @@ class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.String(50), primary_key=True)
     full_name = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
     phone_number = db.Column(db.String(15))
     address = db.Column(db.String(255))
@@ -120,9 +118,9 @@ class ParkingLot(db.Model):
     __tablename__ = "parking_lots"
     id = db.Column(db.Integer, primary_key=True)
     prime_location_name = db.Column(db.String(100), nullable=False)
-    pin_code = db.Column(db.String(20), nullable=False)
-    city = db.Column(db.String(50), nullable=False)
-    state = db.Column(db.String(50), nullable=False)
+    pin_code = db.Column(db.String(20), nullable=False, index=True)
+    city = db.Column(db.String(50), nullable=False, index=True)
+    state = db.Column(db.String(50), nullable=False, index=True)
     district = db.Column(db.String(50), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     price_per_hour = db.Column(db.Float, nullable=False)
@@ -196,10 +194,10 @@ class ReservedParkingSpot(db.Model):
     spot_id = db.Column(
         db.Integer,
         db.ForeignKey("parking_spots.id", ondelete="Set NULL"),
-        nullable=True,
+        nullable=True, index=True
     )
     user_id = db.Column(
-        db.String(50), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        db.String(50), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
     vehicle_number = db.Column(
         db.String(20), db.ForeignKey("vehicles.vehicle_number", ondelete="CASCADE")
@@ -272,15 +270,15 @@ class Vehicle(db.Model):
 
 
 # Admin Seeder
-def create_admin_user(app):
+def create_admin_user(app,email,password):
     with app.app_context():
         if not User.query.filter_by(role=UserRole.ADMIN).first():
             try:
                 admin = User(
                     id="@sharib123",
                     full_name="Sharib Ahmad",
-                    email="sharib@gmail.com",
-                    password_hash=generate_password_hash("admin123"),
+                    email=email,
+                    password_hash=generate_password_hash(password),
                     phone_number="1234567890",
                     address="123 Admin St, Admin City",
                     pin_code="123456",

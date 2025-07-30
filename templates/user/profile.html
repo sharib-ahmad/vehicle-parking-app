@@ -8,13 +8,16 @@ User Profile
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_profile.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_user_dashboard.css') }}">
+
 {% endblock %}
 
 {% block main_content %}
 <div class="container py-5">
     <form method="POST" enctype="multipart/form-data" action="{{ url_for('user.profile') }}">
         {{ form.hidden_tag() }}
-        <div class="card profile-card p-4 shadow-lg border-0">
+        <div class="data-card p-4">
             <h2 class="text-center mb-4">My Profile</h2>
 
             <div class="mb-3">
@@ -39,7 +42,7 @@ User Profile
 
             <!-- Save and Delete Buttons -->
             <div class="d-flex justify-content-between flex-wrap mt-4">
-                {{ form.save_changes(class="btn btn-success px-4 mb-2") }}
+                {{ form.save_changes(class="btn btn-primary px-4 mb-2") }}
 
                 <!-- Trigger modal -->
                 {% if not current_user.is_admin() %}
@@ -60,7 +63,7 @@ User Profile
 <div class="modal fade" id="deleteModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="deleteModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white border-0">
+        <div class="modal-content">
             <div class="modal-header border-0">
                 <h5 class="modal-title">Confirm Deletion</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"

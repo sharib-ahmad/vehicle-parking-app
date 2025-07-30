@@ -1,54 +1,87 @@
-{% extends 'index.html' %}
+{% extends 'layout.html' %}
 
 {% block title %}
-Vehicle-P | contact
+ParkRight | Contact Us
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_about&contact.css') }}">
 {% endblock %}
 
 {% block main_content %}
-<div class="container py-5">
-    <h2 class="text-center mb-4">Contact Us</h2>
 
-    <div class="row">
-        <!-- Contact Info -->
-        <div class="col-md-5 mb-4">
-            <h5><i class="fa-solid fa-location-dot me-2 text-danger"></i>Our Address</h5>
-            <p>123 Example Street, City, Country</p>
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">Get In Touch</h1>
+        <p class="page-subtitle">We're here to help and answer any question you might have. We look forward to hearing from you.</p>
+    </div>
+</section>
 
-            <h5><i class="fa-solid fa-phone me-2 text-success"></i>Call Us</h5>
-            <p>+91 98765 43210</p>
-
-            <h5><i class="fa-solid fa-envelope me-2 text-primary"></i>Email</h5>
-            <p>support@example.com</p>
-        </div>
-
-        <!-- Contact Form -->
-        <div class="col-md-7">
-            <form>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Your Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+<!-- Contact Section -->
+<section class="content-section contact-section">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Contact Info Column -->
+            <div class="col-lg-5" data-aos="fade-right">
+                <div class="contact-info-wrapper">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="contact-info-content">
+                            <h5>Our Office</h5>
+                            <p>123 ParkRight Avenue, Innovation City, 54321</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-info-content">
+                            <h5>Email Us</h5>
+                            <p>support@parkright.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="contact-info-content">
+                            <h5>Call Us</h5>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label for="email" class="form-label">Your Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+            <!-- Contact Form Column -->
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="contact-form-wrapper">
+                    <h3 class="mb-4">Send Us a Message</h3>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name" class="visually-hidden">Your Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email" class="visually-hidden">Your Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" class="visually-hidden">Subject</label>
+                            <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="visually-hidden">Your Message</label>
+                            <textarea class="form-control" id="message" rows="6" placeholder="Write your message here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-submit">Send Message</button>
+                    </form>
                 </div>
-
-                <div class="mb-3">
-                    <label for="subject" class="form-label">Subject</label>
-                    <input type="text" class="form-control" id="subject" placeholder="Subject" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="message" class="form-label">Your Message</label>
-                    <textarea class="form-control" id="message" rows="5" placeholder="Write your message here..."
-                        required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">Send Message</button>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 {% endblock %}

@@ -145,23 +145,40 @@ def reserve_spot(lot_id):
 
     # Populate form choices from external APIs
     try:
-        brand_response = requests.get(
-            "https://private-anon-9f7e7a6b9b-carsapi1.apiary-mock.com/cars"
-        )
-        cars = brand_response.json()
-        brands = sorted({c["make"].capitalize() for c in cars})
-        models = sorted({c["model"].capitalize() for c in cars})
+        df = pd.read_csv("Cars.csv", encoding='ISO-8859-1')
 
+        df = df.dropna(subset=['Company Names', 'Cars Names'])
+
+        df['Company Names'] = df['Company Names'].str.strip().str.capitalize()
+        df['Cars Names'] = df['Cars Names'].str.strip().str.capitalize()
+
+        brands = sorted(df['Company Names'].unique())
+        models = sorted(df['Cars Names'].unique())
         form.brand.choices = [(b, b) for b in brands]
         form.model.choices = [(m, m) for m in models]
 
-        color_response = requests.get("https://csscolorsapi.com/api/colors")
+    except FileNotFoundError:
+        current_app.logger.error("Cars.csv not found")
+        flash("Could not load vehicle data. Please try again later.", "danger")
+        return redirect(url_for("user.dashboard"))
+    
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0"
+        }
+        color_response = requests.get("https://csscolorsapi.com/api/colors", headers=headers)
+        
         if color_response.ok:
-            colors = color_response.json()["colors"]
+            colors = color_response.json().get("colors", [])
             form.color.choices = [(c["name"], c["name"]) for c in colors]
+        else:
+            flash("Failed to load colors from API", "warning")
+
     except requests.RequestException as e:
         current_app.logger.error(f"Failed to fetch data from external APIs: {e}")
         flash("Could not load vehicle data. Please try again later.", "danger")
+
+
 
     if request.method == "GET":
         now = datetime.now(IST).time()
@@ -194,7 +211,7 @@ def reserve_spot(lot_id):
         if not Vehicle.query.filter_by(vehicle_number=form.vehicle_number.data).first():
             new_vehicle = Vehicle(
                 user_id=form.user_id.data,
-                vehicle_number=form.vehicle_number.data,
+                vehicle_number=(form.vehicle_number.data).strip(),
                 fuel_type=form.fuel_type.data,
                 brand=form.brand.data,
                 model=form.model.data,

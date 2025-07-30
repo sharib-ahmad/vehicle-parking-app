@@ -1,43 +1,82 @@
-{% extends 'auth/registration.html' %}
+{% extends 'layout.html' %}
 
 {% block title %}
-Vehicle-P | Login
+ParkRight | Login
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_login&register.css') }}">
 {% endblock %}
 
 {% block main_content %}
-<div class="container-fluid p-5 my-3">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card p-4">
-                <h2 class="text-center mb-4">Login</h2>
-                <form method="POST" action="{{ url_for('auth.login') }}">
-                    
-                    {{ form.hidden_tag() }}
+<div class="auth-wrapper">
+    <div class="auth-card-container">
+        <!-- Decorative Panel -->
+        <div class="auth-decorative-panel">
+            <i class="fas fa-parking decorative-icon"></i>
+            <h2 class="decorative-title">ParkRight</h2>
+            <p class="decorative-text">The future of intelligent, hassle-free parking is here. Welcome back.</p>
+        </div>
 
-                    <div class="form-floating mb-3 position-relative">
-                        {{ form.email(class="form-control", id="email", placeholder="example@gmail.com") }}
-                        {{ form.email.label(class="form-label") }}
-                        <i class="bi bi-envelope position-absolute top-50 end-0 translate-middle-y me-3 fs-3 fw-bold"></i>
-                    </div>
-
-                    <div class="form-floating mb-3 position-relative">
-                        {{ form.password(class="form-control", id="password", placeholder="Password") }}
-                        {{ form.password.label(class="form-label") }}
-                        <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 fs-3 fw-bold"
-                           id="togglePassword" style="cursor: pointer"></i>
-                    </div>
-
-                    {{ form.submit(class="btn btn-primary w-100") }}
-
-                    <div class="text-center mt-3">
-                        <p class="mb-0">Don't have an account?
-                            <a href="{{ url_for('auth.sign_up') }}" class="fs-5 fw-medium">Register here</a>
-                        </p>
-                    </div>
-                </form>
+        <!-- Form Section -->
+        <div class="auth-form-section">
+            <div class="auth-header">
+                <h1 class="auth-title">Welcome Back!</h1>
+                <p class="auth-subtitle">Log in to continue your journey.</p>
             </div>
+
+            <form method="POST" action="{{ url_for('auth.login') }}" class="auth-form" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    {{ form.email.label(class="form-label visually-hidden") }}
+                    {{ form.email(class="form-control", placeholder="Email Address") }}
+                    <i class="fas fa-envelope prefix-icon"></i>
+                </div>
+
+                <div class="form-group">
+                    {{ form.password.label(class="form-label visually-hidden") }}
+                    {{ form.password(class="form-control", id="password", placeholder="Password") }}
+                    <i class="fas fa-lock prefix-icon"></i>
+                    <i class="bi bi-eye-slash toggle-password" id="togglePassword"></i>
+                </div>
+
+                <div class="d-grid mb-3">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+
+                <div class="divider-wrapper">or</div>
+
+                <div class="social-login-wrapper">
+                    <a href="#" class="btn btn-social"><i class="fab fa-google"></i></a>
+                    <a href="#" class="btn btn-social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="btn btn-social"><i class="fab fa-apple"></i></a>
+                </div>
+
+                <div class="auth-link-wrapper">
+                    <p>Don't have an account? <a href="{{ url_for('auth.sign_up') }}">Register here</a></p>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 {% endblock %}
 
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.querySelector("#togglePassword");
+        const password = document.querySelector("#password");
+
+        if (togglePassword) {
+            togglePassword.addEventListener("click", function () {
+                const type = password.getAttribute("type") === "password" ? "text" : "password";
+                password.setAttribute("type", type);
+                this.classList.toggle("bi-eye");
+                this.classList.toggle("bi-eye-slash");
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,42 +1,126 @@
-{% extends 'index.html' %}
+{% extends 'layout.html' %}
 
 {% block title %}
-Vehicle-P | About Us
+ParkRight | About Us
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_about&contact.css') }}">
 {% endblock %}
 
 {% block main_content %}
-<div class="container mb-5">
-    <div class="text-center mb-4">
-        <h2 class="mt-5">ABOUT VEHICLE-P</h2>
-        <p>
-            Vehicle-P is a modern parking management system designed to make parking seamless and hassle-free. 
-            We offer real-time slot tracking, online booking, and secure access for both users and admins.
-        </p>
+
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">About ParkRight</h1>
+        <p class="page-subtitle">Innovating the future of urban mobility and parking solutions.</p>
     </div>
+</section>
 
-    <div class="row align-items-center gy-4">
-        <!-- Image Column -->
-        <div class="col-12 col-lg-6 text-center">
-            <img src="https://picsum.photos/600/400" alt="About Us" class="img-fluid rounded">
-        </div>
-
-        <!-- Text Column -->
-        <div class="col-12 col-lg-6">
-            <p>
-                At Vehicle-P, our mission is to solve daily parking challenges using smart technology. 
-                We’ve made it easy to find, reserve, and manage parking spots with just a few clicks.
-            </p>
-            <p>
-                <strong>Our Features:</strong><br>
-                - Real-time availability updates<br>
-                - Easy and secure booking process<br>
-                - Admin and user dashboards<br>
-                - Trusted by 10,000+ users<br>
-            </p>
-            <p>
-                Whether you're managing a parking facility or just need a spot quickly, Vehicle-P has you covered.
-            </p>
+<!-- Intro Section -->
+<section class="content-section about-intro-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop" 
+                     alt="Our Team" class="img-fluid about-intro-image">
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <h2 class="mb-4">Crafting Seamless Parking Experiences</h2>
+                <p class="about-intro-text">
+                    Welcome to ParkRight, where our passion for technology and urban planning converges to solve one of the most persistent challenges of city life: parking. Founded on the principle of making urban mobility smarter and more sustainable, we are dedicated to transforming the parking landscape.
+                </p>
+                <p class="about-intro-text">
+                    Our platform is more than just an app; it's a comprehensive ecosystem designed to provide drivers with real-time availability, effortless reservations, and secure, cashless payments. For parking operators, we offer powerful tools for management, optimization, and revenue growth.
+                </p>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Our Mission Section -->
+<section class="content-section mission-section">
+    <div class="container">
+        <div class="section-heading" data-aos="fade-up">
+            <h2 class="title">Our Mission</h2>
+            <p class="subtitle">We are driven by three core principles that guide our innovation and define our commitment to users and cities.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="mission-card">
+                    <i class="fas fa-cogs mission-icon"></i>
+                    <h3 class="mission-card-title">Efficiency</h3>
+                    <p class="mission-card-text">To reduce traffic congestion and time wasted searching for parking by providing accurate, real-time data and intelligent routing.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="mission-card">
+                    <i class="fas fa-leaf mission-icon"></i>
+                    <h3 class="mission-card-title">Sustainability</h3>
+                    <p class="mission-card-text">To build greener cities by minimizing vehicle emissions and promoting a more organized, eco-friendly approach to urban mobility.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="mission-card">
+                    <i class="fas fa-handshake mission-icon"></i>
+                    <h3 class="mission-card-title">Simplicity</h3>
+                    <p class="mission-card-text">To deliver an intuitive, user-friendly platform that makes every interaction—from finding a spot to payment—completely seamless.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Meet the Team Section -->
+<section class="content-section team-section">
+    <div class="container">
+        <div class="section-heading" data-aos="fade-up">
+            <h2 class="title">Meet the Team</h2>
+            <p class="subtitle">We are a collective of developers, designers, and strategists united by a shared vision.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="team-member-card">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Team Member 1" class="team-member-image">
+                    <div class="team-member-info">
+                        <h4 class="team-member-name">John Doe</h4>
+                        <p class="team-member-role">CEO & Founder</p>
+                        <div class="team-social-links">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+                <div class="team-member-card">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Team Member 2" class="team-member-image">
+                    <div class="team-member-info">
+                        <h4 class="team-member-name">Jane Smith</h4>
+                        <p class="team-member-role">Chief Technology Officer</p>
+                        <div class="team-social-links">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+                <div class="team-member-card">
+                    <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Team Member 3" class="team-member-image">
+                    <div class="team-member-info">
+                        <h4 class="team-member-name">Alex Johnson</h4>
+                        <p class="team-member-role">Head of Product</p>
+                        <div class="team-social-links">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

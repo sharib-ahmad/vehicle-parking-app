@@ -1,9 +1,12 @@
 {% extends "layout.html" %}
 {% block title %}Register Vehicle{% endblock %}
-
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_user_dashboard.css') }}">
+{% endblock %}
 {% block main_content %}
 
-<div class="modal fade" id="vehicleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="vehicleModalLabel" aria-hidden="true">
+<div class="modal fade" id="vehicleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="vehicleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -73,26 +76,36 @@
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var myModal = new bootstrap.Modal(document.getElementById('vehicleModal'));
+        var myModalEl = document.getElementById('vehicleModal');
+        var myModal = new bootstrap.Modal(myModalEl);
+
+        // Redirect when the modal is hidden to prevent back-button issues
+        myModalEl.addEventListener('hidden.bs.modal', function (event) {
+            window.location.href = "{{ url_for('user.dashboard') }}";
+        });
+
         myModal.show();
+
+        // Your existing fetchVehicleInfo function here...
+        function fetchVehicleInfo() {
+            const vehicleNumber = document.getElementById("vehicle_number").value;
+            if (vehicleNumber.length < 5) return; // Skip short input
+
+            fetch(`/api/vehicle/${vehicleNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.warn(data.error);
+                        return;
+                    }
+                    document.getElementById("brand").value = data.brand;
+                    document.getElementById("model").value = data.model;
+                    document.getElementById("color").value = data.color;
+                    document.getElementById("fuel_type").value = data.fuel_type;
+                });
+        }
+        // Make the function globally accessible if it wasn't before
+        window.fetchVehicleInfo = fetchVehicleInfo;
     });
-
-    function fetchVehicleInfo() {
-        const vehicleNumber = document.getElementById("vehicle_number").value;
-        if (vehicleNumber.length < 5) return; // Skip short input
-
-        fetch(`/api/vehicle/${vehicleNumber}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.warn(data.error);
-                    return;
-                }
-                document.getElementById("brand").value = data.brand;
-                document.getElementById("model").value = data.model;
-                document.getElementById("color").value = data.color;
-                document.getElementById("fuel_type").value = data.fuel_type;
-            });
-    }
 </script>
 {% endblock %}

@@ -2,7 +2,9 @@
 {% block title %}
 Vehicle-P | Payment
 {% endblock %}
-
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_user_dashboard.css') }}">
+{% endblock %}
 {% block main_content %}
 
 <div class="container my-4">

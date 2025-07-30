@@ -1,54 +1,48 @@
-{% extends 'user/dashboard.html' %}
+{% extends 'layout.html' %}
 
-{% block title %}
-Vehicle-P | Users
+{% block title %}Registered Users{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_admin_pages.css') }}">
 {% endblock %}
 
 {% block main_content %}
-{% if users %}
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Registered Users</h2>
-
-    <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle">
-            <thead class="table-light">
-                <tr class="text-success">
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>Full Name</th>
-                    <th>Address</th>
-                    <th>Pincode</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users[:10] %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.full_name }}</td>
-                    <td>{{ user.address }}</td>
-                    <td>{{ user.pin_code }}</td>
-                </tr>
-                {% endfor %}
-
-                {% for user in users[10:] %}
-                <tr class="extra-row d-none">
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.full_name }}</td>
-                    <td>{{ user.address }}</td>
-                    <td>{{ user.pin_code }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        {% if users|length > 10 %}
-        <div class="text-center mt-3">
-            <button id="viewMoreBtn" class="btn btn-outline-primary">View More</button>
-        </div>
-        {% endif %}
+<div class="container py-4">
+    <div class="page-header">
+        <h1 class="page-title"><i class="fas fa-users card-title-icon"></i>Registered Users</h1>
     </div>
+
+    {% if users %}
+    <div class="data-card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Pincode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.full_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.address }}</td>
+                        <td>{{ user.pin_code }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="data-card text-center">
+        <p>No registered users found.</p>
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 {% endblock %}

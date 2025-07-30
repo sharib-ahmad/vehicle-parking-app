@@ -2,6 +2,9 @@
 {% block title %}
 Vehicle-P | Released
 {% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_user_dashboard.css') }}">
+{% endblock %}
 <!-- ReleasedForm Modal -->
 
 {% block main_content %}
@@ -82,7 +85,14 @@ Vehicle-P | Released
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var myModal = new bootstrap.Modal(document.getElementById('releaseModal'));
+        var myModalEl = document.getElementById('releaseModal');
+        var myModal = new bootstrap.Modal(myModalEl);
+
+        // Redirect when the modal is hidden to prevent back-button issues
+        myModalEl.addEventListener('hidden.bs.modal', function (event) {
+            window.location.href = "{{ url_for('user.dashboard') }}";
+        });
+
         myModal.show();
     });
 </script>

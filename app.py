@@ -6,6 +6,7 @@ Roll.no: 24f2001786
 
 import logging
 import os
+from dotenv import load_dotenv
 from logging.handlers import RotatingFileHandler
 
 from flask import Flask
@@ -18,16 +19,14 @@ from models.model import User, create_admin_user
 
 def create_app():
     """Application factory to create and configure the Flask app."""
+    load_dotenv()
     app = Flask(__name__)
 
-    # Base Configuration
-    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
-        BASE_DIR, "vehicle_parking_app.sqlite3"
-    )
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["SECRET_KEY"] = "5aae1d8d09362b9139d9c5a4"
-    app.config["JWT_SECRET_KEY"] = "5aae1d8d09362b9139d9c5a4"
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY")
+
 
     # Extensions Initialization
     db.init_app(app)
@@ -62,9 +61,10 @@ def create_app():
     app.logger.info("🚀 App started and logging is set up.")
 
     # Database & Admin User Creation
+    
     with app.app_context():
         db.create_all()
-        create_admin_user(app)
+        create_admin_user(app,email=os.environ.get("ADMIN_EMAIL"),password=os.environ.get("ADMIN_PASSWORD"))
 
     # Swagger UI for API Documentation
     SWAGGER_URL = "/swagger"

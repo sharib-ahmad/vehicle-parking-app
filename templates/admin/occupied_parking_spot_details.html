@@ -1,59 +1,52 @@
 {% extends 'layout.html' %}
-{% block title %}Occupied Parking Spot Details{% endblock %}
+{% block title %}Occupied Spot Details{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_admin_pages.css') }}">
+{% endblock %}
 
 {% block main_content %}
-<div class="modal fade" id="occupiedSpotModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="occupiedSpotModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="occupiedSpotModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="occupiedSpotModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-warning text-dark">
-                <h5 class="modal-title" id="occupiedSpotModalLabel">Occupied Spot Details</h5>
-                <a href="{{ url_for('admin.parking_lots') }}" class="btn-close"></a>
+            <div class="modal-header">
+                <h5 class="modal-title" id="occupiedSpotModalLabel"><i class="fas fa-car-side icon"></i>Occupied Spot Details</h5>
+                <a href="{{ url_for('admin.view_delete_spot', spot_id=reservation.spot_id) }}" class="btn-close"></a>
             </div>
-
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label"><strong>Spot ID</strong></label>
+                <div class="details-grid">
+                    <div>
+                        <label class="form-label">Spot ID</label>
                         <input class="form-control" value="{{ reservation.spot_id }}" disabled>
                     </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label"><strong>Lot ID</strong></label>
+                    <div>
+                        <label class="form-label">Lot ID</label>
                         <input class="form-control" value="{{ reservation.parking_spot.lot_id}}" disabled>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label"><strong>User ID</strong></label>
+                    <div>
+                        <label class="form-label">User ID</label>
                         <input class="form-control" value="{{ reservation.user.id }}" disabled>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>Booked By</strong></label>
+                    <div>
+                        <label class="form-label">Booked By</label>
                         <input class="form-control" value="{{ reservation.user.full_name }}" disabled>
                     </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>Vehicle Number</strong></label>
+                    <div>
+                        <label class="form-label">Vehicle Number</label>
                         <input class="form-control" value="{{ reservation.vehicle_number }}" disabled>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>Parking Date&Time</strong></label>
-                        <input class="form-control"
-                            value="{{ reservation.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}" disabled>
+                    <div>
+                        <label class="form-label">Parking Time</label>
+                        <input class="form-control" value="{{ reservation.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}" disabled>
                     </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>Est.parking Cost</strong></label>
-                        <input class="form-control" value="{{ est_cost}}" disabled>
+                    <div>
+                        <label class="form-label">Estimated Cost</label>
+                        <input class="form-control" value="₹{{ est_cost }}" disabled>
                     </div>
                 </div>
             </div>
-
             <div class="modal-footer">
-                <a href="{{ url_for('admin.parking_lots') }}" class="btn btn-secondary">Close</a>
+                <a href="{{ url_for('admin.view_delete_spot', spot_id=reservation.spot_id) }}" class="btn btn-secondary">Close</a>
             </div>
         </div>
     </div>
@@ -62,9 +55,9 @@
 
 {% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    window.onload = function() {
         var myModal = new bootstrap.Modal(document.getElementById('occupiedSpotModal'));
         myModal.show();
-    });
+    };
 </script>
 {% endblock %}
