@@ -3,7 +3,8 @@
 # This module handles public-facing routes for the application, such as the home, about, and contact pages.
 """
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template,redirect,url_for
+
 
 # Blueprint Initialization
 # Sets up the local blueprint for public routes.
@@ -27,5 +28,9 @@ def about():
 def contact():
     """Renders the contact page."""
     return render_template('contact.html')
+
+@local_bp.route('/swagger')
+def swagger():
+    return redirect('/swagger/')
 
 # End of Local/Public Controller
