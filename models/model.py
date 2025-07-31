@@ -125,7 +125,7 @@ class ParkingLot(db.Model):
     district = db.Column(db.String(50), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     price_per_hour = db.Column(db.Float, nullable=False)
-    floor_level = db.Column(db.Integer, default=1)
+    floor_level = db.Column(db.String(10))
     maximum_number_of_spots = db.Column(db.Integer, nullable=False)
     revenue = db.Column(db.Float, default=0.0)
     is_active = db.Column(db.Boolean, default=True)
