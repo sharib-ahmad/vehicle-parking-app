@@ -15,9 +15,9 @@ The Vehicle Parking Management System (VPMS) is designed to streamline parking o
 
 - **Backend**: Python, Flask, Flask-Login, Flask-RESTful, SQLAlchemy
 - **Frontend**: Jinja2 Templating, Bootstrap 5, Font Awesome
-- **Database**: SQLite
+- **Database**: PostgreSQL
 - **API Documentation**: Swagger (YAML)
-- **Others**: WTForms, Chart.js (for summary visualization), Car-loading animation, Markdown & ERD documentation
+- **Others**: WTForms, Matplotlib (for summary visualization), Car-loading animation, Markdown & ERD documentation
 
 ---
 
@@ -64,12 +64,6 @@ python app.py
 
 ---
 
-
-## 🎥 Demo Video
-
-Link: [https://drive.google.com/file/d/your-video-link](https://drive.google.com/file/d/1K6dNET8AUnN19ZU2LPB1lYmA8QSx-yPp/view?usp=sharing)
-
----
 
 ## 👨‍💻 Author
 
