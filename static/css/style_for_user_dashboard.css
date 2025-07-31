@@ -733,6 +733,7 @@ html[data-theme='dark'] .card-glass {
   border-color: var(--user-accent-primary);
   box-shadow: 0 0 0 3px var(--user-accent-glow);
   outline: none;
+  color: var(--user-text-primary);
   background: var(--user-card-bg);
   transform: translateY(-1px);
 }
