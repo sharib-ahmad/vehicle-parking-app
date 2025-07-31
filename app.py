@@ -9,7 +9,7 @@ import os
 from dotenv import load_dotenv
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 
@@ -74,6 +74,10 @@ def create_app():
     )
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
     app.static_folder = "static"
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('not_found.html'), 404
 
     return app
 

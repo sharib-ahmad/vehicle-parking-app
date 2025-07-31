@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block title %}404 - Not Found{% endblock %}
+
+{% block main_content %}
+<div class="container py-5 content-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+
+            <div class="text-center p-4 p-md-5"
+                style="background: var(--glass-bg); backdrop-filter: blur(20px); border-radius: var(--border-radius-xl); border: 1px solid var(--glass-border); box-shadow: var(--shadow-xl);">
+
+                <div class="mb-4">
+                    <i class="fas fa-compass fa-4x"
+                        style="background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+                </div>
+
+                <h1 class="display-1 fw-bold" style="font-family: var(--font-display); color: var(--text-primary);">404
+                </h1>
+                <h2 class="mb-3" style="font-family: var(--font-display); color: var(--text-primary);">Page Not Found
+                </h2>
+                <p class="fs-5" style="color: var(--text-secondary);">
+                    Oops! It seems you've taken a wrong turn. The page you're looking for doesn't exist.
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
