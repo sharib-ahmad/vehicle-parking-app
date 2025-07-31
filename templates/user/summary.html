@@ -54,7 +54,7 @@
                                     </td>
                                     <td>
                                         {% if r.parking_spot and r.parking_spot.parking_lot %}
-                                        {{ r.parking_spot.parking_lot.name }}
+                                        {{ r.parking_spot.parking_lot.prime_location_name }}
                                         {% else %}
                                         <span class="text-muted">Deleted Lot</span>
                                         {% endif %}

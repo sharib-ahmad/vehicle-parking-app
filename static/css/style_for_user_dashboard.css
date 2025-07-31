@@ -398,7 +398,6 @@ html[data-theme='dark'] .container::after {
 /* Card Link Styling */
 .card a, .data-card a, .custom-card a {
   text-decoration: none;
-  color: inherit;
   display: block;
   height: 100%;
 }
@@ -995,4 +994,27 @@ html[data-theme='dark'] .card-glass {
   .modal-header, .modal-body, .modal-footer {
     padding: 1rem;
   }
+}
+
+
+.text-muted {
+    color: var(--user-text-muted) !important;
+}
+
+.card-footer {
+    color: var(--user-text-muted);
+    background-color: var(--user-secondary-bg);
+    border-top: 1px solid var(--user-divider);
+}
+
+.btn-outline-danger {
+    color: var(--user-danger);
+    border-color: var(--user-danger);
+    background-color: transparent;
+}
+
+.btn-outline-danger:hover {
+    color: var(--user-text-on-accent);
+    background-color: var(--user-danger);
+    border-color: var(--user-danger);
 }

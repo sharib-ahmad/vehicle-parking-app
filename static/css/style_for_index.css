@@ -69,7 +69,6 @@ html[data-theme='light'] {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: var(--gradient-dark);
 }
 
 /* Animated Particles Background */
