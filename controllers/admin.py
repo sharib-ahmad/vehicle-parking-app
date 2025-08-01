@@ -327,6 +327,7 @@ def search():
             ).first()
 
     form.search_value.data = search_location
+    form.search_by.data = search_by
     return render_template(
         "admin/search.html",
         form=form,

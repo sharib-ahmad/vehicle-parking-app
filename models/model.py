@@ -155,7 +155,7 @@ class ParkingLot(db.Model):
         return f"Occupied: {self.occupied_spots}/{self.maximum_number_of_spots}"
 
     def __repr__(self):
-        return f"<ParkingLot {self.name}>"
+        return f"<ParkingLot {self.prime_location_name}>"
 
 
 # ParkingSpot
